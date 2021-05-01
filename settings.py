@@ -14,14 +14,13 @@ RED = (255, 0, 0)
 GRAVITY = 0.2
 ACCEL = 1
 FRICTION = -0.12
-FASTER_TIME = 5000
+FASTER_TIME = 2000
 
 # Platform properties
 SMALL = (100, 50)
-MEDIUM = (200, 50)
-GROUND = (10000, 50)
+MEDIUM = (20000, 200)
+GROUND = (100000, 100)
 
 # Player properties
 HALF_P_WIDTH = 25
-
-SCROLL = [0, 0]
+PREVIOUS_POS = [0, 0]

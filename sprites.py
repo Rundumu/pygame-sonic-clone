@@ -1,6 +1,5 @@
 import pygame
 from settings import *
-from camera import *
 
 vec = pygame.math.Vector2
 
@@ -11,15 +10,15 @@ class Sonic(pygame.sprite.Sprite):
         self.image = pygame.Surface((50, 50))
         self.image.fill(BLUE)
         self.rect = self.image.get_rect()
-        self.rect.center = (WIDTH / 2, HEIGHT / 2)
+        self.rect.center = (WIDTH / 2, HEIGHT - 51)
         self.pos = vec(WIDTH / 2 , HEIGHT - 51)
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
         self.last_update = 0
+        self.time_passed = 0
         
 
     def update(self):
-        #camera = Camera(self)
         self.acc = vec(0, GRAVITY)
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
@@ -52,10 +51,11 @@ class Sonic(pygame.sprite.Sprite):
     def faster(self):
         now = pygame.time.get_ticks()
         if now - self.last_update > FASTER_TIME:
+            self.time_passed += (now - self.last_update)
             self.acc.x /= 0.5 # player becomes 50% faster
-            if self.vel.x == 0: # if player's velocity is 0 then the player 
-                self.acc.x -= 0.5
-
+            if self.time_passed >= 3000:
+                self.acc.x /= 0.75
+            
 class Ground(pygame.sprite.Sprite):
 
     def __init__(self, x, y, plat):
@@ -75,19 +75,26 @@ class Platform(pygame.sprite.Sprite):
         self.image = pygame.Surface((plat))
         self.image.fill(GREEN)
         self.rect = self.image.get_rect()
-        self.rect.x = x
+        self.rect.x = x 
         self.rect.y = y
 
-# # creates a camera that follows the player
-# class Camera():
-#     def __init__(self, camera_func, width, height):
-#         self.camera_func = camera_func
-#         self.state = pygame.Rect(0, 0, width, height)
+# creates a camera that follows the player
+class Camera():
+    def __init__(self, width, height):
+        self.camera = pygame.Rect(0, 0, width, height)
+        self.width = width
+        self.height = height
     
-#     # set the camera's focus
-#     def apply(self, target):
-#         return target.rect.move(self.state.topleft)
+    # set the camera's focus - offset then applied to above Rect
+    def apply(self, entity):
+        return entity.rect.move(self.camera.topleft) # move by current camera's (0, 0) and returns a new rect
     
-#     # update the camera's position
-#     def update(self, target):
-#         self.state = self.camera_func(self.state, target.rect)
+    # update the camera's position
+    def update(self, target):
+        x = -target.rect.x + int(WIDTH / 2) # keeps player centered
+        y = -target.rect.y + int(HEIGHT - 50) # keeps player centered
+ 
+        x = min(0, x) # ensure camera doesn't go off the screen
+        y = min(0, y)
+
+        self.camera = pygame.Rect(x, y, self.width, self.height)

@@ -1,6 +1,5 @@
 from settings import *
 from sprites import *
-from camera import *
 import pygame
 
 pygame.init()
@@ -12,10 +11,13 @@ running = True
 
 window = pygame.display.set_mode((WIDTH, HEIGHT))
 
+# initialise camera
+camera = Camera(WIDTH, HEIGHT)
 
 
 # player sprites
 s = Sonic()
+player = pygame.sprite.Group()
 
 # floor sprites
 ground = Ground(0, HEIGHT - 50, GROUND)
@@ -23,12 +25,19 @@ floor = pygame.sprite.Group()
 floor.add(ground)
 
 # platform sprites
-plat1 = Platform(WIDTH - 100, HEIGHT - 100, SMALL)
-plat2 = Platform(WIDTH - 100, HEIGHT - 150, SMALL)
-plats = pygame.sprite.Group()
-plats.add(plat1)
-plats.add(plat2)
 
+platforms = [Platform(WIDTH + 200, HEIGHT - 100, SMALL)]
+
+plats = pygame.sprite.Group()
+
+platx = 100 
+
+platy = 50
+
+
+for i in platforms:
+    plats.add(i)
+    
 
 # all sprites
 sprites = pygame.sprite.Group()
@@ -53,16 +62,68 @@ while running:
             for collision in collisions:
                 # TODO: create different classes of platforms each with their own collision properties (done)
                 if s.pos.y > collision.rect.top: 
+                    s.vel.y = (s.vel.y - 0.6)
                     s.pos.y = collision.rect.top
-                    s.vel.y = 0
+                    
+                
+    
+    # TODO: figure out how to reset x vel when jumping
+    
+    if s.vel.x > 0:
+        hits = pygame.sprite.spritecollide(s, plats, False)
+        
+        if hits:
+            for hit in hits:
+                if s.pos.x > hit.rect.left and s.pos.x < hit.rect.right:
+                    s.vel.x = 0
+                    s.pos.x = (hit.rect.left - 30)
+                    
+    if s.vel.x < 0:
+        hits = pygame.sprite.spritecollide(s, plats, False)
 
-    for plat in plats.sprites():
-        if s.rect.colliderect(plat) and s.pos.x > plat.rect.left and not s.rect.y < plat.rect.top:
-            s.pos.x = plat.rect.left - 1 # player sprite will be scaled down by 25px
+        if hits:
+            for hit in hits:
+                if s.pos.x < hit.rect.right and s.pos.x > hit.rect.left:
+                    s.vel.x = 0
+                    s.pos.x = (hit.rect.right + 30)
+    
+    if s.vel.y > 0:
+        s.vel.x = 0
+        s.vel.y = 0
+        hits = pygame.sprite.spritecollide(s, plats, False)
+
+        if hits:
+            for hit in hits:
+                if s.pos.y > hit.rect.top:
+                    s.vel.y = 0
+                    s.pos.y = hit.rect.top
+    
+    if s.vel.y < 0:
+        if s.vel.x > 0 and s.vel.x < 0:
             s.vel.x = 0
-        if s.rect.colliderect(plat) and s.pos.y > plat.rect.top and not s.rect.x < plat.rect.left:
-            s.pos.y = plat.rect.top
-            s.vel.y = 0
+        hits = pygame.sprite.spritecollide(s, plats, False)
+
+        if hits:
+            for hit in hits:
+                if s.pos.y < hit.rect.bottom:
+                    s.vel.x = 0
+                    s.vel.y = 0
+                    s.pos.y = hit.rect.bottom
+    
+
+
+                
+                # if s.vel.x < 0:
+                #     s.rect.left = hits[0].rect.right
+                #     s.vel.x = 0
+                # if s.vel.y < 0:
+                #     s.rect.top = hits[0].rect.bottom
+                #     s.vel.y = 0
+                # if s.vel.y > 0:
+                #     s.rect.bottom = hits[0].rect.top
+                #     s.vel.y = 0
+            
+
     
         
     # if s.pos.x > WIDTH:
@@ -72,22 +133,20 @@ while running:
     #         # set the camera to follow sonic so that he doesn't disappear off the screen
     #         print("poop")
 
+    print(s.vel)
     
     sprites.update()
-    plats.update()
-
-    #camera.scroll()
+    camera.update(s)
 
     # draw
     window.fill(BLACK)
     
-    for plat in plats:
-        window.blit(plat.image, (s.pos.x + SCROLL[0], s.pos.y + SCROLL[1]))
+    for sprite in sprites:
+        window.blit(sprite.image, camera.apply(sprite))
     
-    floor.draw(window)
     
 
-#TODO: Create a map file for the game
+#TODO: Create a way to dynamically generate platforms
 
     # double buffering 
     pygame.display.flip()
