@@ -26,7 +26,7 @@ floor.add(ground)
 
 # platform sprites
 
-platforms = [Platform(WIDTH + 200, HEIGHT - 100, SMALL)]
+platforms = [Platform(WIDTH + 200, HEIGHT - 300, SMALL)]
 
 plats = pygame.sprite.Group()
 
@@ -34,6 +34,7 @@ platx = 100
 
 platy = 50
 
+collision_threshold = 1
 
 for i in platforms:
     plats.add(i)
@@ -45,6 +46,61 @@ sprites.add(s)
 sprites.add(plats)
 sprites.add(ground)
 
+def plat_collision_y():
+    hits = pygame.sprite.spritecollide(s, plats, False)
+    
+    if s.vel.y > 0:
+        if hits:
+            # s.vel.x = int(s.vel.x)
+
+            # s.vel.y = int(s.vel.y)
+            
+            # print(s.vel)
+            for hit in hits:
+                if s.pos.y > hit.rect.top:
+                    s.pos.y = hit.rect.top
+                    s.rect.bottom = s.pos.y
+                    s.vel.y = 0
+
+def plat_collision_x():
+    cols = pygame.sprite.spritecollide(s, plats, False)
+    
+    if s.vel.x > 0:
+        if cols:
+            # s.vel.x = int(s.vel.x)
+
+            # s.vel.y = int(s.vel.y)
+            
+            # print(s.vel)
+            for hit in hits:
+                if s.pos.x > hit.rect.left:
+                    s.pos.x = hit.rect.left
+                    s.rect.right = s.pos.x
+                    s.vel.y = 0
+
+
+    
+    
+        
+                
+        
+        # elif hits[0].rect.right > s.rect.left:
+        #     s.vel.x = 0
+        #     s.pos.x = hits[0].rect.right
+        #     s.rect.left = s.pos.x
+            
+            
+
+        # elif hits[0].rect.left < s.rect.right:
+        #     s.vel.x = 0
+        #     s.pos.x = hits[0].rect.left
+        #     s.rect.right = s.pos.x
+            
+            
+
+    
+
+
 # TODO: figure out a way to blit the camera (done)
 
 while running:
@@ -55,6 +111,16 @@ while running:
             running = False
 
     # update
+
+    
+
+    sprites.update()
+    # print(s.vel)
+
+    plat_collision_y()
+    plat_collision_x()
+
+
     if s.vel.y > 0:
         collisions = pygame.sprite.spritecollide(s, floor, False)
 
@@ -62,54 +128,20 @@ while running:
             for collision in collisions:
                 # TODO: create different classes of platforms each with their own collision properties (done)
                 if s.pos.y > collision.rect.top: 
-                    s.vel.y = (s.vel.y - 0.6)
                     s.pos.y = collision.rect.top
+                    s.rect.bottom = s.pos.y
+                    s.vel.y = 0 
+                    # print(s.acc)
+                    # print(s.vel)
                     
-                
     
-    # TODO: figure out how to reset x vel when jumping
     
-    if s.vel.x > 0:
-        hits = pygame.sprite.spritecollide(s, plats, False)
-        
-        if hits:
-            for hit in hits:
-                if s.pos.x > hit.rect.left and s.pos.x < hit.rect.right:
-                    s.vel.x = 0
-                    s.pos.x = (hit.rect.left - 30)
-                    
-    if s.vel.x < 0:
-        hits = pygame.sprite.spritecollide(s, plats, False)
 
-        if hits:
-            for hit in hits:
-                if s.pos.x < hit.rect.right and s.pos.x > hit.rect.left:
-                    s.vel.x = 0
-                    s.pos.x = (hit.rect.right + 30)
-    
-    if s.vel.y > 0:
-        s.vel.x = 0
-        s.vel.y = 0
-        hits = pygame.sprite.spritecollide(s, plats, False)
-
-        if hits:
-            for hit in hits:
-                if s.pos.y > hit.rect.top:
-                    s.vel.y = 0
-                    s.pos.y = hit.rect.top
-    
-    if s.vel.y < 0:
-        if s.vel.x > 0 and s.vel.x < 0:
-            s.vel.x = 0
-        hits = pygame.sprite.spritecollide(s, plats, False)
-
-        if hits:
-            for hit in hits:
-                if s.pos.y < hit.rect.bottom:
-                    s.vel.x = 0
-                    s.vel.y = 0
-                    s.pos.y = hit.rect.bottom
-    
+                # if s.pos.y < hit.rect.bottom:
+                #     s.pos.y = hit.rect.bottom
+                #     s.rect.bottom = s.pos.y
+                #     # print(s.acc)
+                #     # print(s.vel)
 
 
                 
@@ -133,9 +165,9 @@ while running:
     #         # set the camera to follow sonic so that he doesn't disappear off the screen
     #         print("poop")
 
-    print(s.vel)
     
-    sprites.update()
+    
+
     camera.update(s)
 
     # draw

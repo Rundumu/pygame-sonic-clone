@@ -11,7 +11,7 @@ GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 
 # physics
-GRAVITY = 0.2
+GRAVITY = 0.3
 ACCEL = 1
 FRICTION = -0.12
 FASTER_TIME = 2000
