@@ -55,7 +55,8 @@ class Sonic(pygame.sprite.Sprite):
             self.acc.x /= 0.5 # player becomes 50% faster
             if self.time_passed >= 3000:
                 self.acc.x /= 0.75
-            
+
+# environment classes          
 class Ground(pygame.sprite.Sprite):
 
     def __init__(self, x, y, plat):
@@ -77,6 +78,27 @@ class Platform(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x 
         self.rect.y = y
+
+class Ramp(pygame.sprite.Sprite):
+
+    def __init__(self, x, y, width, height):
+        pygame.sprite.Sprite.__init__(self)
+        self.rect = pygame.Rect(x, y, width, height)
+        self.height = height
+        self.width = width
+        self.rect.x = x
+        self.rect.y = y
+        self.x1, self.y1 = self.rect.bottomleft
+        self.x2, self.y2 = self.rect.topright
+        self.x3, self.y3 = self.rect.bottomright
+        self.image = pygame.draw.polygon(window, GREEN, [[self.x1, self.y1], 
+                                        [self.x2, self.y2], [self.x2, self.y3]])
+    
+    # TODO: Figure out a way to create a function that creates ramps and collision
+
+    # def update(self):
+    #     pygame.draw.polygon(window, GREEN, [[self.x1, self.y1], 
+    #     [self.x2, self.y2], [self.x2, self.y3]])
 
 # creates a camera that follows the player
 class Camera():

@@ -1,7 +1,11 @@
+import pygame
+
 # game properties
 WIDTH = 800
 HEIGHT = 600
 FPS = 60
+window = pygame.display.set_mode((WIDTH, HEIGHT))
+
 
 # colors
 BLACK = (0, 0, 0)
