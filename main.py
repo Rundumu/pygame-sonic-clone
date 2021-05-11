@@ -9,6 +9,13 @@ clock = pygame.time.Clock()
 running = True
 
 
+# def create_ramp(x, y, width, height):
+#     hitbox = pygame.draw.rect(window, BLUE, [x, y, width, height])
+#     x1, y1 = hitbox.bottomleft
+#     x2, y2 = hitbox.topright
+#     x3, y3 = hitbox.bottomright
+#     ramp = pygame.draw.polygon(window, GREEN, [[x1, y1], 
+#                                         [x2, y2], [x3, y3]])
 
 # initialise camera
 camera = Camera(WIDTH, HEIGHT)
@@ -50,7 +57,26 @@ X3 = 200
 Y3 = HEIGHT - 200    
 
 ramp = Ramp(200, HEIGHT - 150, 100, 100)
+ramps = pygame.sprite.Group()
+ramps.add(ramp)
 
+# rings
+ring = Ring(100, HEIGHT - 120)
+ring_x_offset = 50
+ring_y = HEIGHT - 120
+
+ring_x_distance = 500
+rings = pygame.sprite.Group()
+rings.add(ring)
+
+for i in range(150):
+    ring_x_offset += 50
+    print(ring_x_offset)
+    ring = Ring(ring_x_offset, ring_y)
+    rings.add(ring)
+    if ring_x_offset > 150:
+        ring = Ring(ring_x_distance, ring_y)
+        rings.add(ring)
 
 
 # all sprites
@@ -58,7 +84,9 @@ sprites = pygame.sprite.Group()
 sprites.add(s)
 sprites.add(plats)
 sprites.add(ground)
-sprites.add(ramp)         
+sprites.add(ramp)
+sprites.add(ring)         
+
             
 
 # TODO: figure out a way to blit the camera (done)
@@ -71,7 +99,8 @@ while running:
             running = False
 
     # update
-    
+    #ramps.update()
+    rings.update()
     sprites.update()
 
 
@@ -86,36 +115,7 @@ while running:
                     s.rect.bottom = s.pos.y
                     s.vel.y = 0 
 
-    # if s.vel.x > 0:
-    #     hits = pygame.sprite.spritecollide(s, plats, False)
 
-    #     if hits:
-    #         for hit in hits:
-    #             if abs(s.rect.right - hit.rect.left) < 10:
-    #                 s.pos.x = (hit.rect.left - 1) 
-    #                 s.rect.right = s.pos.x
-    #                 s.vel.x = 0
-
-    # if s.vel.x < 0:
-    #     hits = pygame.sprite.spritecollide(s, plats, False)
-
-    #     if hits:
-    #         for hit in hits:
-    #             if abs(s.rect.left - hit.rect.right) < 10:
-    #                 s.pos.x = (hit.rect.right + 1)
-    #                 s.rect.left = s.pos.x
-    #                 s.vel.x = 0
-
-    # if s.vel.y > 0:
-    #     hits = pygame.sprite.spritecollide(s, plats, False)
-
-    #     if hits:
-    #         for hit in hits:
-    #             if abs(s.rect.bottom - hit.rect.top) < 10:
-    #                 print('collision')
-    #                 s.pos.y = (hit.rect.top + 1)
-    #                 s.rect.bottom = s.pos.y
-    #                 s.vel.y = 0
 
     hits = pygame.sprite.spritecollide(s, plats, False)
 
@@ -138,7 +138,35 @@ while running:
                 s.rect.top = (hit.rect.bottom + 1) 
                 s.pos.y = s.rect.bottom
                 s.vel.y = 0
+        
+    ramp_hits = pygame.sprite.spritecollide(s, ramps, False)
+
+    if ramp_hits:
+        for hit in ramp_hits:
+            rel_x = s.pos.x - hit.rect.x
+
+            pos_height = rel_x + s.rect.width
+
+            pos_height = min(pos_height, ramp_hits[0].rect.height)
+            pos_height = max(pos_height, 0)
+
+            target_y = ramp_hits[0].rect.y + ramp_hits[0].rect.height - pos_height
+
+            if s.rect.bottom > target_y:
+                s.rect.bottom = target_y
+                s.pos.y = s.rect.bottom
+
+    ring_hits = pygame.sprite.spritecollide(s, rings, False)
+
+    if ring_hits:
     
+        RING_COUNT += 1
+        rings.add(ring)
+        print(len(rings))
+
+    # TODO: create an exploding list that generates rings
+    
+
     
         
     camera.update(s)
@@ -148,9 +176,11 @@ while running:
     
     for sprite in sprites:
         window.blit(sprite.image, camera.apply(sprite))
+
+
+
         
-    
-    #ramp.ramp()
+        
 
     
 

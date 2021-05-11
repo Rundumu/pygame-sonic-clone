@@ -83,22 +83,23 @@ class Ramp(pygame.sprite.Sprite):
 
     def __init__(self, x, y, width, height):
         pygame.sprite.Sprite.__init__(self)
-        self.rect = pygame.Rect(x, y, width, height)
-        self.height = height
-        self.width = width
+        self.image = pygame.Surface((width, height))
+        self.image.fill(GREEN)
+        self.image.set_alpha(0)
+        self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
         self.x1, self.y1 = self.rect.bottomleft
         self.x2, self.y2 = self.rect.topright
         self.x3, self.y3 = self.rect.bottomright
-        self.image = pygame.draw.polygon(window, GREEN, [[self.x1, self.y1], 
-                                        [self.x2, self.y2], [self.x2, self.y3]])
-    
+        
+
+
     # TODO: Figure out a way to create a function that creates ramps and collision
 
-    # def update(self):
-    #     pygame.draw.polygon(window, GREEN, [[self.x1, self.y1], 
-    #     [self.x2, self.y2], [self.x2, self.y3]])
+    def update(self):
+        pygame.draw.polygon(window, GREEN, [[self.x1, self.y1], [self.x2, self.y2], [self.x3, self.y3]])
+
 
 # creates a camera that follows the player
 class Camera():
@@ -120,3 +121,21 @@ class Camera():
         y = min(0, y)
 
         self.camera = pygame.Rect(x, y, self.width, self.height)
+
+class Ring(pygame.sprite.Sprite):
+
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+
+        self.image = pygame.Surface((15, 15))
+        self.image.fill(YELLOW)
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+    
+    def update(self):
+        pass
+    
+
+
+
