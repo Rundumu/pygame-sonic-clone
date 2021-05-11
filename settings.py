@@ -38,13 +38,7 @@ iter_count = 0
 for i in range(3):
     RING_LIST.append((RING_X + ring_offset, HEIGHT - 150))
     ring_offset += 50
-
-        
-    
-
-    
-        
-
+   
 
 # Player properties
 HALF_P_WIDTH = 25

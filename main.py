@@ -60,6 +60,9 @@ ramp = Ramp(200, HEIGHT - 150, 100, 100)
 ramps = pygame.sprite.Group()
 ramps.add(ramp)
 
+# spikes
+spike = Spike(600, HEIGHT - 65)
+spikes = pygame.sprite.Group()
 
 # all sprites
 sprites = pygame.sprite.Group()
@@ -67,6 +70,7 @@ sprites.add(s)
 sprites.add(plats)
 sprites.add(ground)
 sprites.add(ramp)       
+sprites.add(spike)
 
 # rings
 # ring = Ring(100, HEIGHT - 120)
@@ -164,6 +168,12 @@ while running:
         RING_COUNT += 1
         print(RING_COUNT)
         ring_hits[0].kill()
+
+    pricks = pygame.sprite.spritecollide(s, spikes, False)
+
+    if pricks:
+        RING_COUNT = 0
+        print(RING_COUNT)
 
     # TODO: create an exploding list that generates rings
     
