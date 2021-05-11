@@ -60,34 +60,36 @@ ramp = Ramp(200, HEIGHT - 150, 100, 100)
 ramps = pygame.sprite.Group()
 ramps.add(ramp)
 
-# rings
-ring = Ring(100, HEIGHT - 120)
-ring_x_offset = 50
-ring_y = HEIGHT - 120
-
-ring_x_distance = 500
-rings = pygame.sprite.Group()
-rings.add(ring)
-
-for i in range(150):
-    ring_x_offset += 50
-    print(ring_x_offset)
-    ring = Ring(ring_x_offset, ring_y)
-    rings.add(ring)
-    if ring_x_offset > 150:
-        ring = Ring(ring_x_distance, ring_y)
-        rings.add(ring)
-
 
 # all sprites
 sprites = pygame.sprite.Group()
 sprites.add(s)
 sprites.add(plats)
 sprites.add(ground)
-sprites.add(ramp)
-sprites.add(ring)         
+sprites.add(ramp)       
 
-            
+# rings
+# ring = Ring(100, HEIGHT - 120)
+# ring_x_offset = 50
+# ring_y = HEIGHT - 120
+
+# ring_x_distance = 500
+rings = pygame.sprite.Group()
+
+
+# for i in range(150):
+#     ring_x_offset += 50
+#     print(ring_x_offset)
+#     ring = Ring(ring_x_offset, ring_y)
+#     rings.add(ring)
+#     if ring_x_offset > 150:
+#         ring = Ring(ring_x_distance, ring_y)
+#         rings.add(ring)
+
+for ring in RING_LIST:
+    r = Ring(*ring)
+    rings.add(r)
+    sprites.add(r)       
 
 # TODO: figure out a way to blit the camera (done)
 
@@ -159,10 +161,9 @@ while running:
     ring_hits = pygame.sprite.spritecollide(s, rings, False)
 
     if ring_hits:
-    
         RING_COUNT += 1
-        rings.add(ring)
-        print(len(rings))
+        print(RING_COUNT)
+        ring_hits[0].kill()
 
     # TODO: create an exploding list that generates rings
     
