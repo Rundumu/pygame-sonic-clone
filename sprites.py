@@ -141,7 +141,7 @@ class Spike(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
 
-        self.image = pygame.Surface((30, 50))
+        self.image = pygame.Surface((30, 15))
         self.image.fill(RED)
         self.rect = self.image.get_rect()
         self.rect.x = x
@@ -155,11 +155,27 @@ class Enemies(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
 
-        self.image = pygame.Surface((30, 15))
+        self.image = pygame.Surface((50, 50))
         self.image.fill(RED)
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+        self.vel = 2
+        self.start = (x - 100)
+        self.end = (x + 100)
+        self.path = [self.start, self.end]
+
+    def update(self):
+        if self.vel > 0:
+            if self.rect.x + self.vel < self.path[1]:
+                self.rect.x += self.vel
+            else:
+                self.vel = self.vel * -1
+        else:
+            if self.rect.x - self.vel > self.path[0]:
+                self.rect.x += self.vel
+            else:
+                self.vel = self.vel * -1
 
     
 

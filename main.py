@@ -65,6 +65,11 @@ spike = Spike(600, HEIGHT - 65)
 spikes = pygame.sprite.Group()
 spikes.add(spike)
 
+# enemies
+enemy = Enemies(600, HEIGHT - 100)
+enemies = pygame.sprite.Group()
+enemies.add(enemy)
+
 # all sprites
 sprites = pygame.sprite.Group()
 sprites.add(s)
@@ -72,6 +77,8 @@ sprites.add(plats)
 sprites.add(ground)
 sprites.add(ramp)       
 sprites.add(spike)
+sprites.add(enemy)
+
 
 # rings
 # ring = Ring(100, HEIGHT - 120)
@@ -108,6 +115,7 @@ while running:
     # update
     #ramps.update()
     rings.update()
+    enemy.update()
     spikes.update()
     sprites.update()
 
@@ -198,7 +206,11 @@ while running:
 
     # TODO: create an exploding list that generates rings (done)
     
+    clashes = pygame.sprite.spritecollide(s, enemies, False)
 
+    if clashes:
+        for clash in clashes:
+            pass
     
         
     camera.update(s)
