@@ -160,7 +160,7 @@ class Enemies(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-        self.vel = 2
+        self.vel = 1
         self.start = (x - 100)
         self.end = (x + 100)
         self.path = [self.start, self.end]

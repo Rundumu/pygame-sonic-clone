@@ -61,12 +61,12 @@ ramps = pygame.sprite.Group()
 ramps.add(ramp)
 
 # spikes
-spike = Spike(600, HEIGHT - 65)
+spike = Spike(550, HEIGHT - 65)
 spikes = pygame.sprite.Group()
 spikes.add(spike)
 
 # enemies
-enemy = Enemies(600, HEIGHT - 100)
+enemy = Enemies(1200, HEIGHT - 100)
 enemies = pygame.sprite.Group()
 enemies.add(enemy)
 
@@ -147,7 +147,7 @@ while running:
                 s.pos.x = s.rect.right
                 s.vel.x = 0
             if abs(s.pos.y - hit.rect.top) < 10 and s.vel.y > 0:
-                s.pos.y = hit.rect.top  
+                s.pos.y = hit.rect.top
                 s.rect.bottom = s.pos.y
                 s.vel.y = 0
             if abs(s.rect.top - hit.rect.bottom) < 10 and s.vel.y < 0:
@@ -210,8 +210,20 @@ while running:
 
     if clashes:
         for clash in clashes:
-            pass
-    
+            if s.vel.y > 0 and s.rect.bottom > clash.rect.top and s.rect.bottom != ground.rect.top:
+                s.vel.y = 0
+                clash.vel = 0
+                s.rect.bottom = clash.rect.top
+                s.pos.y = s.rect.bottom
+                clash.kill()
+
+            if s.rect.left < clash.rect.right:
+                s.rect.left = (clash.rect.right + 30)
+                s.pos.x = s.rect.left
+                clash.vel = 0
+                RING_COUNT = 0 
+                # TODO: study collisions with moving objects
+                print(RING_COUNT)
         
     camera.update(s)
 
