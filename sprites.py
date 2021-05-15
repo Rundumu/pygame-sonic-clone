@@ -1,5 +1,6 @@
 import pygame
 from settings import *
+import math
 
 vec = pygame.math.Vector2
 
@@ -16,6 +17,9 @@ class Sonic(pygame.sprite.Sprite):
         self.acc = vec(0, 0)
         self.last_update = 0
         self.time_passed = 0
+        self.radians = 0
+        self.circ_vel = 0.5
+
         
 
     def update(self):
@@ -29,6 +33,13 @@ class Sonic(pygame.sprite.Sprite):
             self.faster()
         if keys[pygame.K_UP]:
             self.acc.y = -ACCEL
+        if keys[pygame.K_DOWN]:
+            self.radians += self.circ_vel
+            self.acc.x = self.acc.x + math.cos(self.radians) * -1
+            self.acc.y = self.acc.y + math.sin(self.radians) * -1
+            print(math.cos(self.radians))
+
+            
                     
        
        # friction check
@@ -177,7 +188,17 @@ class Enemies(pygame.sprite.Sprite):
             else:
                 self.vel = self.vel * -1
 
+class Loop(pygame.sprite.Sprite):
+
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.Surface((200, 200))
+        self.image.fill(RED)
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
     
+
 
 
 

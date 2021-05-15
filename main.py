@@ -1,6 +1,7 @@
 from settings import *
 from sprites import *
 import pygame
+import math
 
 pygame.init()
 pygame.mixer.init()
@@ -217,15 +218,24 @@ while running:
                 s.pos.y = s.rect.bottom
                 clash.kill()
 
-            if s.rect.left < clash.rect.right:
-                s.rect.left = (clash.rect.right + 30)
+            if abs(s.rect.left - clash.rect.right) < 10:
+                s.rect.left = (clash.rect.right + 50)
                 s.pos.x = s.rect.left
-                clash.vel = 0
+                clash.vel = (clash.vel * -1)
+                RING_COUNT = 0 
+                # TODO: study collisions with moving objects
+                print(RING_COUNT)
+            
+            if abs(s.rect.right - clash.rect.left) < 10:
+                s.rect.right = (clash.rect.left - 50)
+                s.pos.x = s.rect.right
+                clash.vel = (clash.vel * -1)
                 RING_COUNT = 0 
                 # TODO: study collisions with moving objects
                 print(RING_COUNT)
         
     camera.update(s)
+
 
     # draw
     window.fill(BLACK)
