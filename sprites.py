@@ -18,9 +18,7 @@ class Sonic(pygame.sprite.Sprite):
         self.last_update = 0
         self.time_passed = 0
         self.radians = 0
-        self.circ_vel = 0.5
-
-        
+        self.circ_vel = -20
 
     def update(self):
         self.acc = vec(0, GRAVITY)
@@ -35,8 +33,8 @@ class Sonic(pygame.sprite.Sprite):
             self.acc.y = -ACCEL
         if keys[pygame.K_DOWN]:
             self.radians += self.circ_vel
-            self.acc.x = self.acc.x + math.cos(self.radians) * -1
-            self.acc.y = self.acc.y + math.sin(self.radians) * -1
+            self.acc.x = self.acc.x + math.cos(self.radians) * -50
+            self.acc.y = self.acc.y + math.sin(self.radians) * -50
             print(math.cos(self.radians))
 
             
@@ -98,8 +96,7 @@ class Ramp(pygame.sprite.Sprite):
         self.image.fill(GREEN)
         self.image.set_alpha(0)
         self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
+        self.rect.midbottom = (x, y)
         self.x1, self.y1 = self.rect.bottomleft
         self.x2, self.y2 = self.rect.topright
         self.x3, self.y3 = self.rect.bottomright
@@ -111,27 +108,6 @@ class Ramp(pygame.sprite.Sprite):
     def update(self):
         pygame.draw.polygon(window, GREEN, [[self.x1, self.y1], [self.x2, self.y2], [self.x3, self.y3]])
 
-
-# creates a camera that follows the player
-class Camera():
-    def __init__(self, width, height):
-        self.camera = pygame.Rect(0, 0, width, height)
-        self.width = width
-        self.height = height
-    
-    # set the camera's focus - offset then applied to above Rect
-    def apply(self, entity):
-        return entity.rect.move(self.camera.topleft) # move by current camera's (0, 0) and returns a new rect
-    
-    # update the camera's position
-    def update(self, target):
-        x = -target.rect.x + int(WIDTH / 2) # keeps player centered
-        y = -target.rect.y + int(HEIGHT - 50) # keeps player centered
- 
-        x = min(0, x) # ensure camera doesn't go off the screen
-        y = min(0, y)
-
-        self.camera = pygame.Rect(x, y, self.width, self.height)
 
 class Ring(pygame.sprite.Sprite):
 
@@ -155,8 +131,8 @@ class Spike(pygame.sprite.Sprite):
         self.image = pygame.Surface((30, 15))
         self.image.fill(RED)
         self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
+        self.rect.midbottom = (x, y)
+
     
     def update(self):
         pass
@@ -169,8 +145,7 @@ class Enemies(pygame.sprite.Sprite):
         self.image = pygame.Surface((50, 50))
         self.image.fill(RED)
         self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
+        self.rect.midbottom = (x, y)
         self.vel = 1
         self.start = (x - 100)
         self.end = (x + 100)
@@ -193,11 +168,33 @@ class Loop(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((200, 200))
-        self.image.fill(RED)
+        self.image.fill(GREEN)
         self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
+        self.rect.midbottom = (x, y)
+
+    def update(self):
+        pass
+
+# creates a camera that follows the player
+class Camera():
+    def __init__(self, width, height):
+        self.camera = pygame.Rect(0, 0, width, height)
+        self.width = width
+        self.height = height
     
+    # set the camera's focus - offset then applied to above Rect
+    def apply(self, entity):
+        return entity.rect.move(self.camera.topleft) # move by current camera's (0, 0) and returns a new rect
+    
+    # update the camera's position
+    def update(self, target):
+        x = -target.rect.x + int(WIDTH / 2) # keeps player centered
+        y = -target.rect.y + int(HEIGHT - 50) # keeps player centered
+ 
+        x = min(0, x) # ensure camera doesn't go off the screen
+        y = min(0, y)
+
+        self.camera = pygame.Rect(x, y, self.width, self.height)
 
 
 

@@ -1,7 +1,9 @@
 from settings import *
 from sprites import *
+from os import path
 import pygame
 import math
+
 
 pygame.init()
 pygame.mixer.init()
@@ -9,6 +11,8 @@ pygame.mixer.init()
 clock = pygame.time.Clock()
 running = True
 
+current_dir = path.dirname(__file__)
+maps_dir = path.join(current_dir, 'maps')
 
 # def create_ramp(x, y, width, height):
 #     hitbox = pygame.draw.rect(window, BLUE, [x, y, width, height])
@@ -46,6 +50,19 @@ collision_threshold = 1
 for i in platforms:
     plats.add(i)
 
+with open(path.join(maps_dir, 'plats.txt'), 'r') as f:
+    data = f.readlines()
+    print(f)
+
+    x = 0
+    y = 1
+
+    for line in data:
+        p = Platform(int(data[x]), int(data[y]), SMALL)
+        plats.add(p)
+        platforms.append(p)
+        x += 2
+        y += 2
 
 # ramps
 X1 = 200
@@ -58,13 +75,20 @@ X3 = 200
 Y3 = HEIGHT - 200    
 
 ramp = Ramp(200, HEIGHT - 150, 100, 100)
+ramp2 = Ramp(2500, HEIGHT - 50, 300, 300)
 ramps = pygame.sprite.Group()
 ramps.add(ramp)
+ramps.add(ramp2)
 
 # spikes
 spike = Spike(550, HEIGHT - 65)
 spikes = pygame.sprite.Group()
 spikes.add(spike)
+
+# loops
+loop = Loop(2000, HEIGHT - 50)
+loops = pygame.sprite.Group()
+loops.add(loop)
 
 # enemies
 enemy = Enemies(1200, HEIGHT - 100)
@@ -74,12 +98,14 @@ enemies.add(enemy)
 # all sprites
 sprites = pygame.sprite.Group()
 sprites.add(s)
-sprites.add(plats)
+for p in platforms:
+    sprites.add(p)
 sprites.add(ground)
-sprites.add(ramp)       
+sprites.add(ramp)
+sprites.add(ramp2)       
 sprites.add(spike)
 sprites.add(enemy)
-
+sprites.add(loop)
 
 # rings
 # ring = Ring(100, HEIGHT - 120)
@@ -242,11 +268,6 @@ while running:
     
     for sprite in sprites:
         window.blit(sprite.image, camera.apply(sprite))
-
-
-
-        
-        
 
     
 
