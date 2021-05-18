@@ -35,35 +35,15 @@ ground = Ground(0, HEIGHT - 50, GROUND)
 floor = pygame.sprite.Group()
 floor.add(ground)
 
-# platform sprites
 
-platforms = [Platform(WIDTH + 200, HEIGHT - 300, SMALL)]
+# with open(path.join(maps_dir, 'plats.txt'), 'r') as f:
+#     data = f.readlines()
 
-plats = pygame.sprite.Group()
-
-platx = 100 
-
-platy = 50
-
-collision_threshold = 1
-
-for i in platforms:
-    plats.add(i)
-
-with open(path.join(maps_dir, 'plats.txt'), 'r') as f:
-    data = f.readlines()
-    print(f)
-
-    x = 0
-    y = 1
-
-    for line in data:
-        p = Platform(int(data[x]), int(data[y]), SMALL)
-        plats.add(p)
-        platforms.append(p)
-        x += 2
-        y += 2
-
+#     for line in data:
+#         p = Platform(int(data[0]), int(data[0]), SMALL)
+#         plats.add(p)
+#         platforms.append(p)
+    
 # ramps
 X1 = 200
 Y1 = HEIGHT- 50
@@ -86,9 +66,9 @@ spikes = pygame.sprite.Group()
 spikes.add(spike)
 
 # loops
-loop = Loop(2000, HEIGHT - 50)
-loops = pygame.sprite.Group()
-loops.add(loop)
+# loop = Loop(2000, HEIGHT - 50)
+# loops = pygame.sprite.Group()
+# loops.add(loop)
 
 # enemies
 enemy = Enemies(1200, HEIGHT - 100)
@@ -98,14 +78,12 @@ enemies.add(enemy)
 # all sprites
 sprites = pygame.sprite.Group()
 sprites.add(s)
-for p in platforms:
-    sprites.add(p)
 sprites.add(ground)
 sprites.add(ramp)
 sprites.add(ramp2)       
 sprites.add(spike)
 sprites.add(enemy)
-sprites.add(loop)
+#sprites.add(loop)
 
 # rings
 # ring = Ring(100, HEIGHT - 120)
@@ -129,6 +107,15 @@ for ring in RING_LIST:
     r = Ring(*ring)
     rings.add(r)
     sprites.add(r)       
+
+# platform sprites
+plats = pygame.sprite.Group()
+
+for p in PLATFORM_LIST:
+    plat = Platform(*p)
+    plats.add(plat)
+    sprites.add(plat)
+
 
 # TODO: figure out a way to blit the camera (done)
 
@@ -165,19 +152,22 @@ while running:
     if hits:
         for hit in hits:
             if abs(s.pos.x - hit.rect.left) < 10 and s.vel.x > 0:
+                print(hit.rect.x)
                 s.pos.x = (hit.rect.left - 1)
                 s.pos.x = s.rect.left
                 s.vel.x = 0  
-            if abs(s.rect.left - hit.rect.right) < 10 and s.vel.x > 0:
-                print(s.vel)
-                s.rect.left = (hit.rect.right + 1)
-                s.pos.x = s.rect.right
+            if abs(s.pos.x - hit.rect.right) < 10 and s.vel.x < 0:
+                print(hit.rect.x)
+                s.rect.left = (hit.rect.right + 50)
+                s.pos.x = s.rect.left
                 s.vel.x = 0
             if abs(s.pos.y - hit.rect.top) < 10 and s.vel.y > 0:
+                print(hit.rect.x)
                 s.pos.y = hit.rect.top
                 s.rect.bottom = s.pos.y
                 s.vel.y = 0
             if abs(s.rect.top - hit.rect.bottom) < 10 and s.vel.y < 0:
+                print(hit.rect.x)
                 s.rect.top = (hit.rect.bottom + 1) 
                 s.pos.y = s.rect.bottom
                 s.vel.y = 0

@@ -85,7 +85,7 @@ class Platform(pygame.sprite.Sprite):
         self.image = pygame.Surface((plat))
         self.image.fill(GREEN)
         self.rect = self.image.get_rect()
-        self.rect.x = x 
+        self.rect.x = x
         self.rect.y = y
 
 class Ramp(pygame.sprite.Sprite):
@@ -163,17 +163,17 @@ class Enemies(pygame.sprite.Sprite):
             else:
                 self.vel = self.vel * -1
 
-class Loop(pygame.sprite.Sprite):
+# class Loop(pygame.sprite.Sprite):
 
-    def __init__(self, x, y):
-        pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.Surface((200, 200))
-        self.image.fill(GREEN)
-        self.rect = self.image.get_rect()
-        self.rect.midbottom = (x, y)
+#     def __init__(self, x, y):
+#         pygame.sprite.Sprite.__init__(self)
+#         self.image = pygame.Surface((200, 200))
+#         self.image.fill(GREEN)
+#         self.rect = self.image.get_rect()
+#         self.rect.midbottom = (x, y)
 
-    def update(self):
-        pass
+#     def update(self):
+#         pass
 
 # creates a camera that follows the player
 class Camera():
