@@ -94,7 +94,7 @@ class Ramp(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((width, height))
         self.image.fill(GREEN)
-        self.image.set_alpha(0)
+        #self.image.set_alpha(0)
         self.rect = self.image.get_rect()
         self.rect.midbottom = (x, y)
         self.x1, self.y1 = self.rect.bottomleft

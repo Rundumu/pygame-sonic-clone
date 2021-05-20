@@ -54,7 +54,7 @@ Y2 = HEIGHT - 50
 X3 = 200
 Y3 = HEIGHT - 200    
 
-ramp = Ramp(200, HEIGHT - 150, 100, 100)
+ramp = Ramp(940, HEIGHT - 50, 160, 160)
 ramp2 = Ramp(2500, HEIGHT - 50, 300, 300)
 ramps = pygame.sprite.Group()
 ramps.add(ramp)
