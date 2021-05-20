@@ -51,8 +51,9 @@ class Sonic(pygame.sprite.Sprite):
 
         # if self.pos.x > WIDTH:
         #     self.pos.x = 0
-        # if self.pos.x < 0:
-        #     self.pos.x = WIDTH
+        if self.pos.x < 0:
+            self.rect.left = 0
+            self.pos.x = self.rect.left
 
         self.rect.midbottom = self.pos
 
@@ -90,13 +91,14 @@ class Platform(pygame.sprite.Sprite):
 
 class Ramp(pygame.sprite.Sprite):
 
-    def __init__(self, x, y, width, height):
+    def __init__(self, x, y, width, height, ramp=0):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((width, height))
         self.image.fill(GREEN)
         #self.image.set_alpha(0)
         self.rect = self.image.get_rect()
         self.rect.midbottom = (x, y)
+        self.ramp = ramp
         self.x1, self.y1 = self.rect.bottomleft
         self.x2, self.y2 = self.rect.topright
         self.x3, self.y3 = self.rect.bottomright

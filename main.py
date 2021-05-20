@@ -54,14 +54,14 @@ Y2 = HEIGHT - 50
 X3 = 200
 Y3 = HEIGHT - 200    
 
-ramp = Ramp(940, HEIGHT - 50, 160, 160)
-ramp2 = Ramp(2500, HEIGHT - 50, 300, 300)
-ramps = pygame.sprite.Group()
-ramps.add(ramp)
-ramps.add(ramp2)
+# ramp = Ramp(940, HEIGHT - 50, 160, 160)
+# ramp2 = Ramp(2500, HEIGHT - 50, 300, 300)
+# ramps = pygame.sprite.Group()
+# ramps.add(ramp)
+# ramps.add(ramp2)
 
 # spikes
-spike = Spike(550, HEIGHT - 65)
+spike = Spike(550, HEIGHT - 50)
 spikes = pygame.sprite.Group()
 spikes.add(spike)
 
@@ -78,9 +78,7 @@ enemies.add(enemy)
 # all sprites
 sprites = pygame.sprite.Group()
 sprites.add(s)
-sprites.add(ground)
-sprites.add(ramp)
-sprites.add(ramp2)       
+sprites.add(ground)      
 sprites.add(spike)
 sprites.add(enemy)
 #sprites.add(loop)
@@ -107,6 +105,14 @@ for ring in RING_LIST:
     r = Ring(*ring)
     rings.add(r)
     sprites.add(r)       
+
+# ramp sprites
+ramps = pygame.sprite.Group()
+
+for r in RAMP_LIST:
+    r = Ramp(*r)
+    ramps.add(r)
+    sprites.add(r)
 
 # platform sprites
 plats = pygame.sprite.Group()
@@ -158,7 +164,7 @@ while running:
                 s.vel.x = 0  
             if abs(s.pos.x - hit.rect.right) < 10 and s.vel.x < 0:
                 print(hit.rect.x)
-                s.rect.left = (hit.rect.right + 50)
+                s.rect.left = (hit.rect.right + 1)
                 s.pos.x = s.rect.left
                 s.vel.x = 0
             if abs(s.pos.y - hit.rect.top) < 10 and s.vel.y > 0:
@@ -178,12 +184,21 @@ while running:
         for hit in ramp_hits:
             rel_x = s.pos.x - hit.rect.x
 
-            pos_height = rel_x + s.rect.width
+            if hit.ramp == 1:
+                pos_height = rel_x + s.rect.width
+                pos_height = min(pos_height, ramp_hits[0].rect.height)
+                pos_height = max(pos_height, 0)               
+            elif hit.ramp == 2:
+                pos_height = hit.rect.width - rel_x
+                pos_height = min(pos_height, ramp_hits[0].rect.height)
+                pos_height = max(pos_height, 0)
 
             pos_height = min(pos_height, ramp_hits[0].rect.height)
             pos_height = max(pos_height, 0)
 
-            target_y = ramp_hits[0].rect.y + ramp_hits[0].rect.height - pos_height
+
+
+            target_y = hit.rect.y + hit.rect.height - pos_height
 
             if s.rect.bottom > target_y:
                 s.rect.bottom = target_y
@@ -258,7 +273,6 @@ while running:
     
     for sprite in sprites:
         window.blit(sprite.image, camera.apply(sprite))
-
     
 
 #TODO: Create a way to dynamically generate platforms
