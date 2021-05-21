@@ -158,22 +158,18 @@ while running:
     if hits:
         for hit in hits:
             if abs(s.pos.x - hit.rect.left) < 10 and s.vel.x > 0:
-                print(hit.rect.x)
                 s.pos.x = (hit.rect.left - 1)
                 s.pos.x = s.rect.left
                 s.vel.x = 0  
             if abs(s.pos.x - hit.rect.right) < 10 and s.vel.x < 0:
-                print(hit.rect.x)
                 s.rect.left = (hit.rect.right + 1)
                 s.pos.x = s.rect.left
                 s.vel.x = 0
             if abs(s.pos.y - hit.rect.top) < 10 and s.vel.y > 0:
-                print(hit.rect.x)
                 s.pos.y = hit.rect.top
                 s.rect.bottom = s.pos.y
                 s.vel.y = 0
             if abs(s.rect.top - hit.rect.bottom) < 10 and s.vel.y < 0:
-                print(hit.rect.x)
                 s.rect.top = (hit.rect.bottom + 1) 
                 s.pos.y = s.rect.bottom
                 s.vel.y = 0
@@ -192,6 +188,10 @@ while running:
                 pos_height = hit.rect.width - rel_x
                 pos_height = min(pos_height, ramp_hits[0].rect.height)
                 pos_height = max(pos_height, 0)
+            if hit.ramp == 2 and abs(s.rect.right - hit.rect.left) < 10 and s.vel.x > 0:
+                s.rect.right = hit.rect.left
+                s.pos.x = hit.rect.left
+                s.vel.x = 0
 
             pos_height = min(pos_height, ramp_hits[0].rect.height)
             pos_height = max(pos_height, 0)
@@ -273,6 +273,8 @@ while running:
     
     for sprite in sprites:
         window.blit(sprite.image, camera.apply(sprite))
+    
+    print(s.pos)
     
 
 #TODO: Create a way to dynamically generate platforms

@@ -85,7 +85,22 @@ RING_LIST = [
     (6780, HEIGHT - 470),
     (8020, HEIGHT - 420),        
     (8050, HEIGHT - 420),        
-    (8080, HEIGHT - 420),        
+    (8080, HEIGHT - 420),
+    (9020, HEIGHT - 320), 
+    (9050, HEIGHT - 320), 
+    (9080, HEIGHT - 320), 
+    (12020, HEIGHT - 320), 
+    (12100, HEIGHT - 320), 
+    (12180, HEIGHT - 320), 
+    (12520, HEIGHT - 320), 
+    (12550, HEIGHT - 320), 
+    (12580, HEIGHT - 320), 
+    (13180, HEIGHT - 70), 
+    (13220, HEIGHT - 70), 
+    (13260, HEIGHT - 70), 
+
+
+
     ]
 
 ring_offset = 50
