@@ -60,28 +60,17 @@ Y3 = HEIGHT - 200
 # ramps.add(ramp)
 # ramps.add(ramp2)
 
-# spikes
-spike = Spike(550, HEIGHT - 50)
-spikes = pygame.sprite.Group()
-spikes.add(spike)
 
 # loops
 # loop = Loop(2000, HEIGHT - 50)
 # loops = pygame.sprite.Group()
 # loops.add(loop)
 
-# enemies
-enemy = Enemies(1200, HEIGHT - 100)
-enemies = pygame.sprite.Group()
-enemies.add(enemy)
-
 # all sprites
 sprites = pygame.sprite.Group()
 sprites.add(s)
 sprites.add(ground)      
-sprites.add(spike)
-sprites.add(enemy)
-#sprites.add(loop)
+
 
 # rings
 # ring = Ring(100, HEIGHT - 120)
@@ -122,6 +111,22 @@ for p in PLATFORM_LIST:
     plats.add(plat)
     sprites.add(plat)
 
+# spike sprites
+spikes = pygame.sprite.Group()
+
+for i in SPIKE_LIST:
+    spike = Spike(*i)
+    spikes.add(spike)
+    sprites.add(spike)
+
+
+# enemy sprites
+enemies = pygame.sprite.Group()
+
+for e in ENEMY_LIST:
+    enemy = Enemies(*e)
+    enemies.add(enemy)
+    sprites.add(enemy)
 
 # TODO: figure out a way to blit the camera (done)
 

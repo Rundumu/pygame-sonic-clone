@@ -12,7 +12,7 @@ class Sonic(pygame.sprite.Sprite):
         self.image.fill(BLUE)
         self.rect = self.image.get_rect()
         self.rect.center = (WIDTH / 2, HEIGHT - 51)
-        self.pos = vec(WIDTH / 2 , HEIGHT - 51)
+        self.pos = vec(WIDTH / 4 , HEIGHT - 51)
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
         self.last_update = 0

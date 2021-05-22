@@ -111,7 +111,25 @@ for i in range(2):
    
 
 # Spike properties
-SPIKE_LIST = []
+SPIKE_LIST = [
+    (550, HEIGHT - 50),
+    (1700, HEIGHT - 200),
+    (2600, HEIGHT - 50),
+    (3200, HEIGHT - 50),
+    (3700, HEIGHT - 50),
+    (5170, HEIGHT - 200),
+
+]
+
+# enemy properties
+ENEMY_LIST = [
+    (375, HEIGHT - 50),
+    (1400, HEIGHT - 200),
+    (2300, HEIGHT - 50),
+    (4090, HEIGHT - 300),
+    (5500, HEIGHT - 200),
+    (7863, HEIGHT - 200),
+]
 
 # Player properties
 HALF_P_WIDTH = 25
