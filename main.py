@@ -221,6 +221,14 @@ while running:
     if pricks:
         for prick in pricks:
             if s.vel.y > 0 and s.rect.bottom > prick.rect.top:
+                if RING_COUNT > 0:
+                    RING_COUNT = RING_COUNT / 2
+                    r = Ring(s.pos.x - 180, s.rect.centery)
+                    rings.add(r)
+                    sprites.add(r)
+                    window.blit(r.image, (s.pos.x - 180, s.rect.centery))
+                else:
+                    pass
                 s.rect.bottom = prick.rect.top
                 s.pos.y = s.rect.bottom
                 s.pos.x = (prick.rect.left - 50)
@@ -245,9 +253,10 @@ while running:
     
     clashes = pygame.sprite.spritecollide(s, enemies, False)
 
+    CURRENT = RING_COUNT
     if clashes:
         for clash in clashes:
-            if s.vel.y > 0 and s.rect.bottom > clash.rect.top and s.rect.bottom != ground.rect.top:
+            if s.vel.y > 0 and abs(clash.rect.top - s.rect.bottom) < 5:
                 s.vel.y = 0
                 clash.vel = 0
                 s.rect.bottom = clash.rect.top
@@ -255,6 +264,14 @@ while running:
                 clash.kill()
 
             if abs(s.rect.left - clash.rect.right) < 10:
+                if RING_COUNT > 0:
+                    RING_COUNT = RING_COUNT / 2
+                    r = Ring(s.pos.x + 80, s.rect.centery)
+                    rings.add(r)
+                    sprites.add(r)
+                    window.blit(r.image, (s.pos.x + 80, s.rect.centery))
+                else:
+                    pass
                 s.rect.left = (clash.rect.right + 50)
                 s.pos.x = s.rect.left
                 clash.vel = (clash.vel * -1)
@@ -263,6 +280,15 @@ while running:
                 print(RING_COUNT)
             
             if abs(s.rect.right - clash.rect.left) < 10:
+                if RING_COUNT > 0:
+                    RING_COUNT = RING_COUNT / 2
+                    r = Ring(s.pos.x - 80, s.rect.centery)
+                    rings.add(r)
+                    sprites.add(r)
+                    window.blit(r.image, (s.pos.x - 80, s.rect.centery))
+                else:
+                    pass
+                
                 s.rect.right = (clash.rect.left - 50)
                 s.pos.x = s.rect.right
                 clash.vel = (clash.vel * -1)
@@ -279,7 +305,7 @@ while running:
     for sprite in sprites:
         window.blit(sprite.image, camera.apply(sprite))
     
-    print(s.pos)
+    
     
 
 #TODO: Create a way to dynamically generate platforms
