@@ -15,6 +15,7 @@ class Sonic(pygame.sprite.Sprite):
         self.pos = vec(WIDTH / 4 , HEIGHT - 51)
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
+        self.jumping = False
         self.last_update = 0
         self.time_passed = 0
         self.radians = 0
@@ -29,8 +30,16 @@ class Sonic(pygame.sprite.Sprite):
         if keys[pygame.K_RIGHT]:
             self.acc.x = ACCEL
             self.faster()
-        if keys[pygame.K_UP]:
+        if keys[pygame.K_SPACE]:
+            now = pygame.time.get_ticks()
             self.acc.y = -ACCEL
+            self.jumping = True
+            if now - self.last_update > 1000:
+                del keys[pygame.K_SPACE]
+        if not keys[pygame.K_SPACE]:
+            self.limit_jump()
+
+                
         if keys[pygame.K_DOWN]:
             self.radians += self.circ_vel
             self.acc.x = self.acc.x + math.cos(self.radians) * -50
@@ -65,6 +74,12 @@ class Sonic(pygame.sprite.Sprite):
             self.acc.x /= 0.5 # player becomes 50% faster
             if self.time_passed >= 3000:
                 self.acc.x /= 0.75
+
+    def limit_jump(self):
+        if self.jumping:
+            if self.vel.y < -3:
+                self.vel.y = -3
+                self.jumping = False
 
 # environment classes          
 class Ground(pygame.sprite.Sprite):
