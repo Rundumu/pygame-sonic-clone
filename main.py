@@ -136,6 +136,13 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                s.jump()
+
+        if event.type == pygame.KEYUP: 
+            if event.key == pygame.K_SPACE:
+                s.limit_jump()
 
     # update
     #ramps.update()
