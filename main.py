@@ -137,7 +137,10 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE:
+            plat_hits = pygame.sprite.spritecollide(s, floor, False)
+
+
+            if event.key == pygame.K_SPACE and s.jumping == False and s.vel.y > -3:
                 s.jump()
 
         if event.type == pygame.KEYUP: 
@@ -145,7 +148,7 @@ while running:
                 s.limit_jump()
 
     # update
-    #ramps.update()
+
     rings.update()
     enemy.update()
     spikes.update()

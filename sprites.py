@@ -22,14 +22,12 @@ class Sonic(pygame.sprite.Sprite):
         self.circ_vel = -20
 
     def jump(self):
-        if self.jumping == False:
-            self.jumping = True
-            self.vel.y = -10
+        self.jumping = True
+        if self.jumping == True and self.vel.y > -9:
+            self.vel.y = -9
     
     def limit_jump(self):
         self.jumping = False
-        if self.vel.y < -3:
-            self.vel.y = 0 
 
     def update(self):
         self.acc = vec(0, GRAVITY)
