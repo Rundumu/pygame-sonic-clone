@@ -4,9 +4,84 @@ from os import path
 import pygame
 import math
 
+class Game():
+    
+    def __init__(self):
+        pygame.init()
+        pygame.mixer.init()
 
-pygame.init()
-pygame.mixer.init()
+        self.running = True
+        self.clock = pygame.time.Clock()
+    
+    def new_game(self):
+        pass
+
+    def run(self):
+        pass
+
+    def draw(self):
+        pass
+
+    def update(self):
+        # sprites   
+        self.s = Sonic()
+        self.ground = Ground(0, HEIGHT - 50, GROUND)
+        
+
+        # groups
+        self.sprites = pygame.sprite.Group()
+        self.player = pygame.sprite.Group()
+        self.floor = pygame.sprite.Group()
+        self.rings = pygame.sprite.Group()
+        self.ramps = pygame.sprite.Group()
+        self.plats = pygame.sprite.Group()
+        self.spikes = pygame.sprite.Group()
+        self.enemies = pygame.sprite.Group()
+
+        # procedural generation (not sure)
+        for ring in RING_LIST:
+            r = Ring(*ring)
+            self.rings.add(r)
+            self.sprites.add(r) 
+
+        for r in RAMP_LIST:
+            r = Ramp(*r)
+            self.ramps.add(r)
+            self.sprites.add(r)
+
+        for p in PLATFORM_LIST:
+            plat = Platform(*p)
+            self.plats.add(plat)
+            self.sprites.add(plat)
+
+        for i in SPIKE_LIST:
+            spike = Spike(*i)
+            self.spikes.add(spike)
+            self.sprites.add(spike)
+
+        for e in ENEMY_LIST:
+            enemy = Enemies(*e)
+            self.enemies.add(enemy)
+            self.sprites.add(enemy)
+
+
+
+
+
+
+
+
+
+    def events(self):
+        pass
+
+    def game_over():
+        pass
+
+    def start():
+        pass
+
+
 
 clock = pygame.time.Clock()
 running = True
@@ -26,15 +101,6 @@ maps_dir = path.join(current_dir, 'maps')
 camera = Camera(WIDTH, HEIGHT)
 
 
-# player sprites
-s = Sonic()
-player = pygame.sprite.Group()
-
-# floor sprites
-ground = Ground(0, HEIGHT - 50, GROUND)
-floor = pygame.sprite.Group()
-floor.add(ground)
-
 
 # with open(path.join(maps_dir, 'plats.txt'), 'r') as f:
 #     data = f.readlines()
@@ -44,15 +110,6 @@ floor.add(ground)
 #         plats.add(p)
 #         platforms.append(p)
     
-# ramps
-X1 = 200
-Y1 = HEIGHT- 50
-
-X2 = 120
-Y2 = HEIGHT - 50
-
-X3 = 200
-Y3 = HEIGHT - 200    
 
 # ramp = Ramp(940, HEIGHT - 50, 160, 160)
 # ramp2 = Ramp(2500, HEIGHT - 50, 300, 300)
@@ -64,12 +121,7 @@ Y3 = HEIGHT - 200
 # loops
 # loop = Loop(2000, HEIGHT - 50)
 # loops = pygame.sprite.Group()
-# loops.add(loop)
-
-# all sprites
-sprites = pygame.sprite.Group()
-sprites.add(s)
-sprites.add(ground)      
+# loops.add(loop)  
 
 
 # rings
@@ -78,7 +130,7 @@ sprites.add(ground)
 # ring_y = HEIGHT - 120
 
 # ring_x_distance = 500
-rings = pygame.sprite.Group()
+
 
 
 # for i in range(150):
@@ -90,45 +142,8 @@ rings = pygame.sprite.Group()
 #         ring = Ring(ring_x_distance, ring_y)
 #         rings.add(ring)
 
-for ring in RING_LIST:
-    r = Ring(*ring)
-    rings.add(r)
-    sprites.add(r)       
-
-# ramp sprites
-ramps = pygame.sprite.Group()
-
-for r in RAMP_LIST:
-    r = Ramp(*r)
-    ramps.add(r)
-    sprites.add(r)
-
-# platform sprites
-plats = pygame.sprite.Group()
-
-for p in PLATFORM_LIST:
-    plat = Platform(*p)
-    plats.add(plat)
-    sprites.add(plat)
-
-# spike sprites
-spikes = pygame.sprite.Group()
-
-for i in SPIKE_LIST:
-    spike = Spike(*i)
-    spikes.add(spike)
-    sprites.add(spike)
-
-
-# enemy sprites
-enemies = pygame.sprite.Group()
-
-for e in ENEMY_LIST:
-    enemy = Enemies(*e)
-    enemies.add(enemy)
-    sprites.add(enemy)
-
 # TODO: figure out a way to blit the camera (done)
+
 
 while running:
     clock.tick(FPS)
