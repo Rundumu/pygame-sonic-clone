@@ -13,12 +13,9 @@ class Game():
         self.running = True
         self.clock = pygame.time.Clock()
         self.camera = Camera(WIDTH, HEIGHT)
+        self.window = pygame.display.set_mode((WIDTH, HEIGHT))
     
-    def new_game(self):
-        # sprites   
-        self.s = Sonic()
-        self.ground = Ground(0, HEIGHT - 50, GROUND)
-        
+    def new_game(self):       
 
         # groups
         self.sprites = pygame.sprite.Group()
@@ -30,24 +27,15 @@ class Game():
         self.spikes = pygame.sprite.Group()
         self.enemies = pygame.sprite.Group()
 
-    def run(self):
-        self.running = True
-        while self.running:
-            self.clock.tick(FPS)
-            self.events()
-            self.update()
-            self.draw()
+        # sprites   
+        self.s = Sonic(self)
+        self.ground = Ground(0, HEIGHT - 50)
 
-    def draw(self):
-        # draw
-        window.fill(BLACK)
+        # adding to groups
         
-        for sprite in self.sprites:
-            window.blit(sprite.image, self.camera.apply(sprite))
-
-        pygame.display.flip()
-
-    def update(self):
+        self.sprites.add(self.s)
+        self.sprites.add(self.ground)
+        self.floor.add(self.ground)
 
         # procedural generation (not sure)
         for ring in RING_LIST:
@@ -61,7 +49,7 @@ class Game():
             self.sprites.add(r)
 
         for p in PLATFORM_LIST:
-            plat = Platform(*p)
+            plat = Platform(*p, self)
             self.plats.add(plat)
             self.sprites.add(plat)
 
@@ -74,12 +62,33 @@ class Game():
             enemy = Enemies(*e)
             self.enemies.add(enemy)
             self.sprites.add(enemy)
+        
+        self.run()
 
+    def run(self):
+        self.playing = True
+        while self.playing:
+            self.clock.tick(FPS)
+            self.events()
+            self.update()
+            self.draw()
+
+    def draw(self):
+        # draw
+        self.window.fill(BLACK)
+
+        
+        for sprite in self.sprites:
+            self.window.blit(sprite.image, self.camera.apply(sprite))
+
+        pygame.display.flip()
+
+    def update(self):
         # update
 
-        self.rings.update()
-        self.enemy.update()
-        self.spikes.update()
+        # self.rings.update()
+        # self.enemy.update()
+        # self.spikes.update()
         self.sprites.update()
 
 
@@ -148,7 +157,9 @@ class Game():
                     self.s.pos.y = self.s.rect.bottom
 
         ring_hits = pygame.sprite.spritecollide(self.s, self.rings, False)
-
+        
+        RING_COUNT = 0
+        
         if ring_hits:
             RING_COUNT += 1
             print(RING_COUNT)
@@ -164,7 +175,7 @@ class Game():
                         r = Ring(self.s.pos.x - 180, self.s.rect.centery)
                         self.rings.add(r)
                         self.sprites.add(r)
-                        window.blit(r.image, (self.s.pos.x - 180, self.s.rect.centery))
+                        self.window.blit(r.image, (self.s.pos.x - 180, self.s.rect.centery))
                     else:
                         pass
                     self.s.rect.bottom = prick.rect.top
@@ -185,13 +196,12 @@ class Game():
                     self.s.vel.x = 0
                     self.s.vel.y = 0
 
-
+        self.camera.update(self.s)
 
         # TODO: create an exploding list that generates rings (done)
 
         clashes = pygame.sprite.spritecollide(self.s, self.enemies, False)
 
-        CURRENT = RING_COUNT
         if clashes:
             for clash in clashes:
                 if self.s.vel.y > 0 and abs(clash.rect.top - self.s.rect.bottom) < 5:
@@ -207,7 +217,7 @@ class Game():
                         r = Ring(self.s.pos.x + 80, self.s.rect.centery)
                         self.rings.add(r)
                         self.sprites.add(r)
-                        window.blit(r.image, (self.s.pos.x + 80, self.s.rect.centery))
+                        self.window.blit(r.image, (self.s.pos.x + 80, self.s.rect.centery))
                     else:
                         pass
                     self.s.rect.left = (clash.rect.right + 50)
@@ -223,7 +233,7 @@ class Game():
                         r = Ring(self.s.pos.x - 80, self.s.rect.centery)
                         self.rings.add(r)
                         self.sprites.add(r)
-                        window.blit(r.image, (self.s.pos.x - 80, self.s.rect.centery))
+                        self.window.blit(r.image, (self.s.pos.x - 80, self.s.rect.centery))
                     else:
                         pass
                     
@@ -234,22 +244,27 @@ class Game():
                     # TODO: study collisions with moving objects
                     print(RING_COUNT)
             
-        camera.update(self.s)
+        
 
     def events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                self.playing = False
+                self.running = False
+                 
             if event.type == pygame.KEYDOWN:
-                plat_hits = pygame.sprite.spritecollide(self.s, self.floor, False)
-
-
-                if event.key == pygame.K_SPACE and self.s.jumping == False and self.s.vel.y > -3:
-                    self.s.jump()
-
-            if event.type == pygame.KEYUP: 
                 if event.key == pygame.K_SPACE:
-                    self.s.limit_jump()
+                    self.s.pos.y += 1
+                    collisions = pygame.sprite.spritecollide(self.s, self.floor, False)
+                    self.s.pos.y -= 1
+
+                    if collisions:
+                        print("h")
+                        self.s.vel.y = -9
+
+            # if event.type == pygame.KEYUP: 
+            #     if event.key == pygame.K_SPACE:
+            #         self.s.limit_jump()
 
     def game_over():
         pass
@@ -323,3 +338,5 @@ g = Game()
 
 while g.running:
     g.new_game()
+
+pygame.quit()

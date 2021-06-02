@@ -6,8 +6,9 @@ vec = pygame.math.Vector2
 
 class Sonic(pygame.sprite.Sprite):
     
-    def __init__(self):
+    def __init__(self, game):
         pygame.sprite.Sprite.__init__(self)
+        self.game = game
         self.image = pygame.Surface((50, 50))
         self.image.fill(BLUE)
         self.rect = self.image.get_rect()
@@ -22,9 +23,13 @@ class Sonic(pygame.sprite.Sprite):
         self.circ_vel = -20
 
     def jump(self):
-        self.jumping = True
-        if self.jumping == True and self.vel.y > -9:
-            self.vel.y = -9
+        # self.rect.y += 1
+        # hitting = pygame.sprite.spritecollide(self, self.game.plats, False)
+        # self.rect.y -= 1
+
+        # if hitting:
+        #     print('pop')
+        self.vel.y = -9
     
     def limit_jump(self):
         self.jumping = False
@@ -89,7 +94,7 @@ class Sonic(pygame.sprite.Sprite):
 # environment classes          
 class Ground(pygame.sprite.Sprite):
 
-    def __init__(self, x, y, plat):
+    def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((GROUND))
         self.image.fill(GREEN)
@@ -101,10 +106,11 @@ class Ground(pygame.sprite.Sprite):
 
 class Platform(pygame.sprite.Sprite):
 
-    def __init__(self, x, y, plat):
+    def __init__(self, x, y, plat, game):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((plat))
         self.image.fill(GREEN)
+        self.game = game
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -127,8 +133,8 @@ class Ramp(pygame.sprite.Sprite):
 
     # TODO: Figure out a way to create a function that creates ramps and collision
 
-    def update(self):
-        pygame.draw.polygon(window, GREEN, [[self.x1, self.y1], [self.x2, self.y2], [self.x3, self.y3]])
+    # def update(self):
+    #     pygame.draw.polygon(window, GREEN, [[self.x1, self.y1], [self.x2, self.y2], [self.x3, self.y3]])
 
 
 class Ring(pygame.sprite.Sprite):
