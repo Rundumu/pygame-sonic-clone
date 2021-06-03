@@ -7,8 +7,8 @@ vec = pygame.math.Vector2
 class Sonic(pygame.sprite.Sprite):
     
     def __init__(self, game):
-        pygame.sprite.Sprite.__init__(self)
         self.game = game
+        pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((50, 50))
         self.image.fill(BLUE)
         self.rect = self.image.get_rect()
@@ -23,16 +23,19 @@ class Sonic(pygame.sprite.Sprite):
         self.circ_vel = -20
 
     def jump(self):
-        # self.rect.y += 1
-        # hitting = pygame.sprite.spritecollide(self, self.game.plats, False)
-        # self.rect.y -= 1
+        self.rect.y += 1
+        hits = pygame.sprite.spritecollide(self, self.game.floor, False)
+        self.rect.y -= 1
 
-        # if hitting:
-        #     print('pop')
-        self.vel.y = -9
+        if hits or not self.jumping:
+            print(hits)
+            self.jumping = True
+            self.vel.y -= PLAYER_JUMP
     
-    def limit_jump(self):
-        self.jumping = False
+    # def limit_jump(self):
+    #     if self.jumping:
+    #         if self.vel.y < -3:
+    #             self.vel.y = -3
 
     def update(self):
         self.acc = vec(0, GRAVITY)
@@ -43,6 +46,8 @@ class Sonic(pygame.sprite.Sprite):
         if keys[pygame.K_RIGHT]:
             self.acc.x = ACCEL
             self.faster()
+        if keys[pygame.K_SPACE]:
+            self.jump()
         # if self.jumping == False and keys[pygame.K_SPACE]:
         #     self.acc.y = -ACCEL
         #     self.jumping = True
@@ -94,10 +99,11 @@ class Sonic(pygame.sprite.Sprite):
 # environment classes          
 class Ground(pygame.sprite.Sprite):
 
-    def __init__(self, x, y):
+    def __init__(self, game, x, y):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((GROUND))
         self.image.fill(GREEN)
+        self.game = game
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -106,7 +112,7 @@ class Ground(pygame.sprite.Sprite):
 
 class Platform(pygame.sprite.Sprite):
 
-    def __init__(self, x, y, plat, game):
+    def __init__(self, game, x, y, plat):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((plat))
         self.image.fill(GREEN)

@@ -29,7 +29,7 @@ class Game():
 
         # sprites   
         self.s = Sonic(self)
-        self.ground = Ground(0, HEIGHT - 50)
+        self.ground = Ground(self, 0, HEIGHT - 50)
 
         # adding to groups
         
@@ -49,7 +49,7 @@ class Game():
             self.sprites.add(r)
 
         for p in PLATFORM_LIST:
-            plat = Platform(*p, self)
+            plat = Platform(self, *p)
             self.plats.add(plat)
             self.sprites.add(plat)
 
@@ -252,15 +252,9 @@ class Game():
                 self.playing = False
                 self.running = False
                  
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
-                    self.s.pos.y += 1
-                    collisions = pygame.sprite.spritecollide(self.s, self.floor, False)
-                    self.s.pos.y -= 1
-
-                    if collisions:
-                        print("h")
-                        self.s.vel.y = -9
+            # if event.type == pygame.KEYDOWN:
+            #     if event.key == pygame.K_SPACE:
+            #         self.s.jump()
 
             # if event.type == pygame.KEYUP: 
             #     if event.key == pygame.K_SPACE:
