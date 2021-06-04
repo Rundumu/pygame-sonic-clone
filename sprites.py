@@ -27,11 +27,20 @@ class Sonic(pygame.sprite.Sprite):
         hits = pygame.sprite.spritecollide(self, self.game.floor, False)
         self.rect.y -= 1
 
+        self.rect.y += 1
+        hitting = pygame.sprite.spritecollide(self, self.game.plats, False)
+        self.rect.y -= 1
+
+        if hitting or not self.jumping:
+            self.jumping = True
+            self.vel.y -= PLAYER_JUMP
+
         if hits or not self.jumping:
             print(hits)
             self.jumping = True
             self.vel.y -= PLAYER_JUMP
-    
+
+        
     # def limit_jump(self):
     #     if self.jumping:
     #         if self.vel.y < -3:

@@ -28,6 +28,7 @@ GROUND = (100000, 100)
 
 PLATFORM_LIST = [
     (1000, HEIGHT - 200, LARGE),
+    (2650, HEIGHT - 250, SMALL),
     (2900, HEIGHT - 300, SMALL),
     (3200, HEIGHT - 400, SMALL),
     (3500, HEIGHT - 400, SMALL),
@@ -115,7 +116,7 @@ for i in range(2):
 # Spike properties
 SPIKE_LIST = [
     (550, HEIGHT - 50),
-    (1700, HEIGHT - 200),
+    (1650, HEIGHT - 200),
     (2600, HEIGHT - 50),
     (3200, HEIGHT - 50),
     (3700, HEIGHT - 50),
@@ -137,4 +138,4 @@ ENEMY_LIST = [
 HALF_P_WIDTH = 25
 PREVIOUS_POS = [0, 0]
 RING_COUNT = 0
-PLAYER_JUMP = 10
+PLAYER_JUMP = 11
