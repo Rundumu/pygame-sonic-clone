@@ -13,6 +13,8 @@ YELLOW = (239, 245, 66)
 BLUE = (0, 255, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
+WHITE = (255, 255, 255)
+CYAN = (116, 205, 174)
 
 # physics
 GRAVITY = 0.3

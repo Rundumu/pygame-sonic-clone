@@ -1,8 +1,10 @@
 from settings import *
 from sprites import *
+from spritesheet import Spritesheet
 from os import path
 import pygame
 import math
+
 
 class Game():
     
@@ -13,9 +15,26 @@ class Game():
         self.running = True
         self.clock = pygame.time.Clock()
         self.camera = Camera(WIDTH, HEIGHT)
+        self.canvas = pygame.Surface((WIDTH, HEIGHT))
         self.window = pygame.display.set_mode((WIDTH, HEIGHT))
     
-    def new_game(self):       
+    def new_game(self):
+
+        self.my_spritesheet = Spritesheet('trainer_sheet.png')
+        self.trainer = [self.my_spritesheet.parse_sprite("trainer1.png"), 
+                        self.my_spritesheet.parse_sprite("trainer2.png"),
+                        self.my_spritesheet.parse_sprite("trainer3.png"),
+                        self.my_spritesheet.parse_sprite("trainer4.png"),
+                        self.my_spritesheet.parse_sprite("trainer5.png")]
+        
+        # self.trainer2 = [self.my_spritesheet.parse_sprite("f_trainer1.png"), 
+        #                 self.my_spritesheet.parse_sprite("f_trainer2.png"),
+        #                 self.my_spritesheet.parse_sprite("f_trainer3.png"),
+        #                 self.my_spritesheet.parse_sprite("f_trainer4.png"),
+        #                 self.my_spritesheet.parse_sprite("f_trainer5.png")]
+        
+        self.index = 0
+               
 
         # groups
         self.sprites = pygame.sprite.Group()
@@ -76,9 +95,10 @@ class Game():
     def draw(self):
         # draw
         self.window.fill(BLACK)
-
+        
         
         for sprite in self.sprites:
+            self.window.blit(self.trainer[self.index], (0, HEIGHT - 200))
             self.window.blit(sprite.image, self.camera.apply(sprite))
 
         pygame.display.flip()
@@ -244,7 +264,7 @@ class Game():
                     # TODO: study collisions with moving objects
                     print(RING_COUNT)
             
-        
+
 
     def events(self):
         for event in pygame.event.get():
@@ -252,9 +272,9 @@ class Game():
                 self.playing = False
                 self.running = False
                  
-            # if event.type == pygame.KEYDOWN:
-            #     if event.key == pygame.K_SPACE:
-            #         self.s.jump()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    self.index = (self.index + 1) % len(self.trainer)
 
             # if event.type == pygame.KEYUP: 
             #     if event.key == pygame.K_SPACE:

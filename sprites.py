@@ -1,16 +1,19 @@
 import pygame
 from settings import *
+from spritesheet import Spritesheet
 import math
 
 vec = pygame.math.Vector2
-
+            
 class Sonic(pygame.sprite.Sprite):
     
     def __init__(self, game):
         self.game = game
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.Surface((50, 50))
-        self.image.fill(BLUE)
+        self.spritesheet = Spritesheet("spritesheet.png")
+        self.image = self.spritesheet.get_sprite(0, 0, 234, 252)
+        self.image.set_colorkey(CYAN)
+        #self.image.fill(BLUE)
         self.rect = self.image.get_rect()
         self.rect.center = (WIDTH / 2, HEIGHT - 51)
         self.pos = vec(WIDTH / 4 , HEIGHT - 51)
@@ -156,7 +159,6 @@ class Ring(pygame.sprite.Sprite):
 
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
-
         self.image = pygame.Surface((15, 15))
         self.image.fill(YELLOW)
         self.rect = self.image.get_rect()
@@ -171,7 +173,7 @@ class Spike(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
 
-        self.image = pygame.Surface((30, 15))
+        self.image = pygame.Surface((30, 50))
         self.image.fill(RED)
         self.rect = self.image.get_rect()
         self.rect.midbottom = (x, y)

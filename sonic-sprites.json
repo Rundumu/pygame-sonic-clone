@@ -1,0 +1,20 @@
+{"frames": {
+
+"sonic-sprites.png":
+{
+	"frame": {"x":1,"y":1,"w":750,"h":470},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":750,"h":470},
+	"sourceSize": {"w":750,"h":470}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "sonic-sprites.png",
+	"format": "RGBA8888",
+	"size": {"w":752,"h":472},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:7d6224794428ee7af195ba64fc1c615e:3a265e1f87b224c405746515cfb21ca9:c897ceb6609e9b7685c072476c734a3d$"
+}
+}
