@@ -12,6 +12,7 @@ class Sonic(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.spritesheet = Spritesheet("spritesheet.png")
         self.image = self.spritesheet.get_sprite(0, 0, 234, 252)
+        self.image = pygame.transform.scale(self.image, (100, 100))
         self.image.set_colorkey(CYAN)
         #self.image.fill(BLUE)
         self.rect = self.image.get_rect()
@@ -22,6 +23,9 @@ class Sonic(pygame.sprite.Sprite):
         self.jumping = False
         self.last_update = 0
         self.time_passed = 0
+        self.current_frame = 0
+        self.previous_frame = 0
+        self.animating = False
         self.radians = 0
         self.circ_vel = -20
 
@@ -56,6 +60,8 @@ class Sonic(pygame.sprite.Sprite):
             self.acc.x = -ACCEL - 2
             self.faster()
         if keys[pygame.K_RIGHT]:
+            self.animate()
+            self.runRight()
             self.acc.x = ACCEL
             self.faster()
         if keys[pygame.K_SPACE]:
@@ -104,9 +110,33 @@ class Sonic(pygame.sprite.Sprite):
             self.acc.x /= 0.5 # player becomes 50% faster
             if self.time_passed >= 3000:
                 self.acc.x /= 0.75
-
     
-                
+    def animate(self):
+        self.animating = True
+
+    def runRight(self):
+        self.spritesheet = Spritesheet("spritesheet2.png")
+        self.image = self.spritesheet.get_sprite(0, 0, 234, 252)
+        self.image = pygame.transform.smoothscale(self.image, (100, 100))
+        self.image.set_colorkey(CYAN)
+
+        now = pygame.time.get_ticks()
+        
+        
+        self.current_frame += 1
+
+
+        if self.animating == True:
+            if self.current_frame >= len(self.game.s_running):
+                self.current_frame = 0
+                self.animating = False
+
+        if now - self.previous_frame > 5000:
+            self.image = self.game.s_running[self.current_frame]
+            self.image = pygame.transform.smoothscale(self.image, (100, 100))
+            self.image.set_colorkey(CYAN)
+
+
 
 # environment classes          
 class Ground(pygame.sprite.Sprite):

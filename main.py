@@ -20,12 +20,12 @@ class Game():
     
     def new_game(self):
 
-        self.my_spritesheet = Spritesheet('trainer_sheet.png')
-        self.trainer = [self.my_spritesheet.parse_sprite("trainer1.png"), 
-                        self.my_spritesheet.parse_sprite("trainer2.png"),
-                        self.my_spritesheet.parse_sprite("trainer3.png"),
-                        self.my_spritesheet.parse_sprite("trainer4.png"),
-                        self.my_spritesheet.parse_sprite("trainer5.png")]
+        self.s_run = Spritesheet('spritesheet2.png')
+        self.s_running = [self.s_run.parse_sprite("sonic-run1.png"), 
+                        self.s_run.parse_sprite("sonic-run2.png"),
+                        self.s_run.parse_sprite("sonic-run3.png"),
+                        self.s_run.parse_sprite("sonic-run4.png"),
+                        self.s_run.parse_sprite("sonic-run5.png")]
         
         # self.trainer2 = [self.my_spritesheet.parse_sprite("f_trainer1.png"), 
         #                 self.my_spritesheet.parse_sprite("f_trainer2.png"),
@@ -98,7 +98,6 @@ class Game():
         
         
         for sprite in self.sprites:
-            self.window.blit(self.trainer[self.index], (0, HEIGHT - 200))
             self.window.blit(sprite.image, self.camera.apply(sprite))
 
         pygame.display.flip()
