@@ -21,13 +21,37 @@ class Sonic(pygame.sprite.Sprite):
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
         self.jumping = False
+        self.standing = True
         self.last_update = 0
         self.time_passed = 0
         self.current_frame = 0
+        self.standing_frames = 0
         self.previous_frame = 0
+        self.previous_standing_frame = 0
         self.animating = False
         self.radians = 0
         self.circ_vel = -20
+
+    def stand(self):
+        if self.standing:
+            self.spritesheet = Spritesheet("spritesheet.png")
+            self.image = self.spritesheet.get_sprite(0, 0, 234, 252)
+            self.image = pygame.transform.scale(self.image, (100, 100))
+
+             
+            now = pygame.time.get_ticks()
+            self.standing_frames += 0.01
+                
+
+            if self.animating == True:
+                if self.standing_frames >= len(self.game.s_standing):
+                    self.standing_frames = 0
+                    self.animating = False
+                                
+                    
+            self.image = self.game.s_standing[int(self.standing_frames)]
+            self.image = pygame.transform.scale(self.image, (100, 100))
+            self.image.set_colorkey(CYAN)
 
     def jump(self):
         self.rect.y += 1
@@ -66,6 +90,10 @@ class Sonic(pygame.sprite.Sprite):
             self.faster()
         if keys[pygame.K_SPACE]:
             self.jump()
+        else:
+            self.animate()
+            self.stand()
+       
         # if self.jumping == False and keys[pygame.K_SPACE]:
         #     self.acc.y = -ACCEL
         #     self.jumping = True
@@ -76,14 +104,17 @@ class Sonic(pygame.sprite.Sprite):
         
 
                 
-        if keys[pygame.K_DOWN]:
-            self.radians += self.circ_vel
-            self.acc.x = self.acc.x + math.cos(self.radians) * -50
-            self.acc.y = self.acc.y + math.sin(self.radians) * -50
-            print(math.cos(self.radians))
+        # if keys[pygame.K_DOWN]:
+        #     self.radians += self.circ_vel
+        #     self.acc.x = self.acc.x + math.cos(self.radians) * -50
+        #     self.acc.y = self.acc.y + math.sin(self.radians) * -50
+        #     print(math.cos(self.radians))
 
-            
-                    
+        
+                       
+                       
+                        
+                
        
        # friction check
         self.acc.x += self.vel.x * FRICTION
@@ -101,6 +132,7 @@ class Sonic(pygame.sprite.Sprite):
             self.pos.x = self.rect.left
 
         self.rect.midbottom = self.pos
+        print(self.standing)
 
     # sonic speed feature - get faster after running for x amount of time
     def faster(self):
@@ -113,11 +145,17 @@ class Sonic(pygame.sprite.Sprite):
     
     def animate(self):
         self.animating = True
+    
+    
+
+    def runLeft(self):
+        pass
 
     def runRight(self):
+        self.standing = False
         self.spritesheet = Spritesheet("spritesheet2.png")
         self.image = self.spritesheet.get_sprite(0, 0, 234, 252)
-        self.image = pygame.transform.smoothscale(self.image, (100, 100))
+        # self.image = pygame.transform.smoothscale(self.sprite, (100, 100))
         self.image.set_colorkey(CYAN)
 
         now = pygame.time.get_ticks()
@@ -135,6 +173,8 @@ class Sonic(pygame.sprite.Sprite):
             self.image = self.game.s_running[self.current_frame]
             self.image = pygame.transform.smoothscale(self.image, (100, 100))
             self.image.set_colorkey(CYAN)
+            # self.sprite.set_colorkey(CYAN)
+            # self.image.set_colorkey(CYAN)
 
 
 

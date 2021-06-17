@@ -62,6 +62,8 @@ RAMP_LIST = [
 
 
 # Ring properties
+RING_TOTAL = 0
+
 RING_X = 500
 
 RING_LIST = [
@@ -119,10 +121,10 @@ for i in range(2):
 SPIKE_LIST = [
     (550, HEIGHT - 50),
     (1650, HEIGHT - 200),
-    (2600, HEIGHT - 50),
+    (2700, HEIGHT - 50),
     (3200, HEIGHT - 50),
     (3700, HEIGHT - 50),
-    (5170, HEIGHT - 200),
+    (5300, HEIGHT - 200),
 
 ]
 

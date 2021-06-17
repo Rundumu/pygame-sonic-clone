@@ -3,7 +3,6 @@ from sprites import *
 from spritesheet import Spritesheet
 from os import path
 import pygame
-import math
 
 
 class Game():
@@ -15,8 +14,8 @@ class Game():
         self.running = True
         self.clock = pygame.time.Clock()
         self.camera = Camera(WIDTH, HEIGHT)
-        self.canvas = pygame.Surface((WIDTH, HEIGHT))
-        self.window = pygame.display.set_mode((WIDTH, HEIGHT))
+        self.ring_count = 0
+        self.window = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
     
     def new_game(self):
 
@@ -27,11 +26,11 @@ class Game():
                         self.s_run.parse_sprite("sonic-run4.png"),
                         self.s_run.parse_sprite("sonic-run5.png")]
         
-        # self.trainer2 = [self.my_spritesheet.parse_sprite("f_trainer1.png"), 
-        #                 self.my_spritesheet.parse_sprite("f_trainer2.png"),
-        #                 self.my_spritesheet.parse_sprite("f_trainer3.png"),
-        #                 self.my_spritesheet.parse_sprite("f_trainer4.png"),
-        #                 self.my_spritesheet.parse_sprite("f_trainer5.png")]
+        self.s_stand = Spritesheet('spritesheet.png')
+        self.s_standing = [self.s_stand.parse_sprite("sonic1.png"), 
+                        self.s_stand.parse_sprite("sonic2.png"),
+                        self.s_stand.parse_sprite("sonic3.png"),
+                        self.s_stand.parse_sprite("sonic4.png")]
         
         self.index = 0
                
@@ -177,11 +176,11 @@ class Game():
 
         ring_hits = pygame.sprite.spritecollide(self.s, self.rings, False)
         
-        RING_COUNT = 0
+        
         
         if ring_hits:
-            RING_COUNT += 1
-            print(RING_COUNT)
+            self.ring_count += 1
+            print(self.ring_count)
             ring_hits[0].kill()
 
         pricks = pygame.sprite.spritecollide(self.s, self.spikes, False)
@@ -189,8 +188,8 @@ class Game():
         if pricks:
             for prick in pricks:
                 if self.s.vel.y > 0 and self.s.rect.bottom > prick.rect.top:
-                    if RING_COUNT > 0:
-                        RING_COUNT = RING_COUNT / 2
+                    if self.ring_count > 0:
+                        self.ring_count = self.ring_count / 2
                         r = Ring(self.s.pos.x - 180, self.s.rect.centery)
                         self.rings.add(r)
                         self.sprites.add(r)
@@ -202,8 +201,7 @@ class Game():
                     self.s.pos.x = (prick.rect.left - 50)
                     self.s.vel.y = 0
                     self.s.vel.x = 0
-                    RING_COUNT = 0
-                    print(RING_COUNT)
+                    self.ring_count = 0
                 if self.s.vel.x > 0 and self.s.rect.right > prick.rect.left:
                     self.s.rect.right = (prick.rect.left - 50)
                     self.s.pos.x = self.s.rect.right
@@ -231,8 +229,8 @@ class Game():
                     clash.kill()
 
                 if abs(self.s.rect.left - clash.rect.right) < 10:
-                    if RING_COUNT > 0:
-                        RING_COUNT = RING_COUNT / 2
+                    if self.ring_count > 0:
+                        self.ring_count = self.ring_count / 2
                         r = Ring(self.s.pos.x + 80, self.s.rect.centery)
                         self.rings.add(r)
                         self.sprites.add(r)
@@ -242,13 +240,13 @@ class Game():
                     self.s.rect.left = (clash.rect.right + 50)
                     self.s.pos.x = self.s.rect.left
                     clash.vel = (clash.vel * -1)
-                    RING_COUNT = 0 
+                    self.ring_count = 0 
                     # TODO: study collisions with moving objects
-                    print(RING_COUNT)
+                    print(self.ring_count)
                 
                 if abs(self.s.rect.right - clash.rect.left) < 10:
-                    if RING_COUNT > 0:
-                        RING_COUNT = RING_COUNT / 2
+                    if self.ring_count > 0:
+                        self.ring_count = self.ring_count / 2
                         r = Ring(self.s.pos.x - 80, self.s.rect.centery)
                         self.rings.add(r)
                         self.sprites.add(r)
@@ -259,10 +257,10 @@ class Game():
                     self.s.rect.right = (clash.rect.left - 50)
                     self.s.pos.x = self.s.rect.right
                     clash.vel = (clash.vel * -1)
-                    RING_COUNT = 0 
+                    self.ring_count = 0 
                     # TODO: study collisions with moving objects
-                    print(RING_COUNT)
-            
+
+        RING_TOTAL = self.ring_count       
 
 
     def events(self):
@@ -271,9 +269,9 @@ class Game():
                 self.playing = False
                 self.running = False
                  
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_UP:
-                    self.index = (self.index + 1) % len(self.trainer)
+            # if event.type == pygame.KEYDOWN:
+            #     if event.key == pygame.K_UP:
+            #         self.index = (self.index + 1) % len(self.trainer)
 
             # if event.type == pygame.KEYUP: 
             #     if event.key == pygame.K_SPACE:
