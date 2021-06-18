@@ -25,6 +25,7 @@ class Sonic(pygame.sprite.Sprite):
         self.last_update = 0
         self.time_passed = 0
         self.current_frame = 0
+        self.left_current_frame = 0
         self.standing_frames = 0
         self.previous_frame = 0
         self.previous_standing_frame = 0
@@ -83,6 +84,7 @@ class Sonic(pygame.sprite.Sprite):
         if keys[pygame.K_LEFT]:
             self.acc.x = -ACCEL - 2
             self.faster()
+            self.runLeft()
         if keys[pygame.K_RIGHT]:
             self.animate()
             self.runRight()
@@ -90,9 +92,7 @@ class Sonic(pygame.sprite.Sprite):
             self.faster()
         if keys[pygame.K_SPACE]:
             self.jump()
-        else:
-            self.animate()
-            self.stand()
+        print(keys)
        
         # if self.jumping == False and keys[pygame.K_SPACE]:
         #     self.acc.y = -ACCEL
@@ -132,7 +132,6 @@ class Sonic(pygame.sprite.Sprite):
             self.pos.x = self.rect.left
 
         self.rect.midbottom = self.pos
-        print(self.standing)
 
     # sonic speed feature - get faster after running for x amount of time
     def faster(self):
@@ -145,37 +144,58 @@ class Sonic(pygame.sprite.Sprite):
     
     def animate(self):
         self.animating = True
+        self.standing = False
     
     
 
     def runLeft(self):
-        pass
+        if self.vel.x < 0:
+            self.spritesheet = Spritesheet("spritesheet2.png")
+            self.image = self.spritesheet.get_sprite(0, 0, 234, 252)
+            # self.image = pygame.transform.smoothscale(self.sprite, (100, 100))
+            self.image.set_colorkey(CYAN)
+
+            now = pygame.time.get_ticks()
+            
+            
+            self.left_current_frame += 1
+
+
+            if self.animating == True:
+                self.left_current_frame = (self.left_current_frame + 1 ) % len(self.game.s_running)
+
+            if now - self.previous_frame > 5000:
+                self.image = self.game.s_running[self.left_current_frame]
+                self.image = pygame.transform.smoothscale(self.image, (100, 100))
+                self.image.set_colorkey(CYAN)
+                self.image = pygame.transform.flip(self.image, True, False)
+                # self.sprite.set_colorkey(CYAN)
+                # self.image.set_colorkey(CYAN)
 
     def runRight(self):
-        self.standing = False
-        self.spritesheet = Spritesheet("spritesheet2.png")
-        self.image = self.spritesheet.get_sprite(0, 0, 234, 252)
-        # self.image = pygame.transform.smoothscale(self.sprite, (100, 100))
-        self.image.set_colorkey(CYAN)
-
-        now = pygame.time.get_ticks()
-        
-        
-        self.current_frame += 1
-
-
-        if self.animating == True:
-            if self.current_frame >= len(self.game.s_running):
-                self.current_frame = 0
-                self.animating = False
-
-        if now - self.previous_frame > 5000:
-            self.image = self.game.s_running[self.current_frame]
-            self.image = pygame.transform.smoothscale(self.image, (100, 100))
+        if self.vel.x > 0:
+            self.spritesheet = Spritesheet("spritesheet2.png")
+            self.image = self.spritesheet.get_sprite(0, 0, 234, 252)
+            # self.image = pygame.transform.smoothscale(self.sprite, (100, 100))
             self.image.set_colorkey(CYAN)
-            # self.sprite.set_colorkey(CYAN)
-            # self.image.set_colorkey(CYAN)
 
+            now = pygame.time.get_ticks()
+            
+            
+            self.current_frame += 1
+
+
+            if self.animating == True:
+                if self.current_frame >= len(self.game.s_running):
+                    self.current_frame = 0
+                    self.animating = False
+
+            if now - self.previous_frame > 5000:
+                self.image = self.game.s_running[self.current_frame]
+                self.image = pygame.transform.smoothscale(self.image, (100, 100))
+                self.image.set_colorkey(CYAN)
+                # self.sprite.set_colorkey(CYAN)
+                # self.image.set_colorkey(CYAN)
 
 
 # environment classes          
