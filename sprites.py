@@ -27,6 +27,7 @@ class Sonic(pygame.sprite.Sprite):
         self.current_frame = 0
         self.left_current_frame = 0
         self.standing_frames = 0
+        self.jumping_frames = 0
         self.previous_frame = 0
         self.previous_standing_frame = 0
         self.animating = False
@@ -39,38 +40,59 @@ class Sonic(pygame.sprite.Sprite):
             self.image = self.spritesheet.get_sprite(0, 0, 234, 252)
             self.image = pygame.transform.scale(self.image, (100, 100))
 
-             
+            
             now = pygame.time.get_ticks()
             self.standing_frames += 0.01
-                
-
-            if self.animating == True:
-                if self.standing_frames >= len(self.game.s_standing):
-                    self.standing_frames = 0
-                    self.animating = False
+            
+            try:
+                self.standing_frames = (self.standing_frames + 1) % len(self.game.s_standing)
+            except IndexError:
+                self.standing_frames = 0
                                 
-                    
+            
             self.image = self.game.s_standing[int(self.standing_frames)]
             self.image = pygame.transform.scale(self.image, (100, 100))
             self.image.set_colorkey(CYAN)
+            
+        
 
     def jump(self):
-        self.rect.y += 1
-        hits = pygame.sprite.spritecollide(self, self.game.floor, False)
-        self.rect.y -= 1
+        try:
+            if self.jumping:
+                self.spritesheet = Spritesheet("spritesheet3.png")
+                self.image = self.spritesheet.get_sprite(0, 0, 232, 252)
+                self.image = pygame.transform.scale(self.image, (100, 100))
 
-        self.rect.y += 1
-        hitting = pygame.sprite.spritecollide(self, self.game.plats, False)
-        self.rect.y -= 1
+                    
+                now = pygame.time.get_ticks()
+                self.jumping_frames += 0.01
+                                        
+                                    
+                self.jumping_frames = (self.jumping_frames + 1) % len(self.game.s_jumping)        
+                self.image = self.game.s_jumping[int(self.jumping_frames)]
+                self.image = pygame.transform.scale(self.image, (100, 100))
+                self.image.set_colorkey(CYAN) 
 
-        if hitting or not self.jumping:
-            self.jumping = True
-            self.vel.y -= PLAYER_JUMP
+            self.rect.y += 1
+            hits = pygame.sprite.spritecollide(self, self.game.floor, False)
+            self.rect.y -= 1
 
-        if hits or not self.jumping:
-            print(hits)
-            self.jumping = True
-            self.vel.y -= PLAYER_JUMP
+            self.rect.y += 1
+            hitting = pygame.sprite.spritecollide(self, self.game.plats, False)
+            self.rect.y -= 1
+
+            if hitting or not self.jumping:
+                self.jumping = True
+                self.vel.y -= PLAYER_JUMP
+
+            if hits or not self.jumping:
+                print(hits)
+                self.jumping = True
+                self.vel.y -= PLAYER_JUMP
+        except IndexError:
+            pass
+
+
 
         
     # def limit_jump(self):
@@ -115,7 +137,8 @@ class Sonic(pygame.sprite.Sprite):
                        
                        
                         
-                
+        # jumping animations
+             
        
        # friction check
         self.acc.x += self.vel.x * FRICTION
