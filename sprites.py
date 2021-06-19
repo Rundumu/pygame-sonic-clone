@@ -92,8 +92,9 @@ class Sonic(pygame.sprite.Sprite):
             self.faster()
         if keys[pygame.K_SPACE]:
             self.jump()
-        print(keys)
-       
+        else:
+            if 1 not in keys:
+                self.stand()
         # if self.jumping == False and keys[pygame.K_SPACE]:
         #     self.acc.y = -ACCEL
         #     self.jumping = True
@@ -144,7 +145,6 @@ class Sonic(pygame.sprite.Sprite):
     
     def animate(self):
         self.animating = True
-        self.standing = False
     
     
 
@@ -152,23 +152,24 @@ class Sonic(pygame.sprite.Sprite):
         if self.vel.x < 0:
             self.spritesheet = Spritesheet("spritesheet2.png")
             self.image = self.spritesheet.get_sprite(0, 0, 234, 252)
-            # self.image = pygame.transform.smoothscale(self.sprite, (100, 100))
+            self.image = pygame.transform.smoothscale(self.image, (100, 100))
             self.image.set_colorkey(CYAN)
 
             now = pygame.time.get_ticks()
             
             
-            self.left_current_frame += 1
+            self.left_current_frame += 0.01
 
 
             if self.animating == True:
-                self.left_current_frame = (self.left_current_frame + 1 ) % len(self.game.s_running)
+                self.left_current_frame = (self.left_current_frame + 1) % len(self.game.s_running)
 
             if now - self.previous_frame > 5000:
-                self.image = self.game.s_running[self.left_current_frame]
+                self.image = self.game.s_running[int(self.left_current_frame)]
                 self.image = pygame.transform.smoothscale(self.image, (100, 100))
-                self.image.set_colorkey(CYAN)
                 self.image = pygame.transform.flip(self.image, True, False)
+                self.image.set_colorkey(CYAN)
+
                 # self.sprite.set_colorkey(CYAN)
                 # self.image.set_colorkey(CYAN)
 
@@ -176,7 +177,7 @@ class Sonic(pygame.sprite.Sprite):
         if self.vel.x > 0:
             self.spritesheet = Spritesheet("spritesheet2.png")
             self.image = self.spritesheet.get_sprite(0, 0, 234, 252)
-            # self.image = pygame.transform.smoothscale(self.sprite, (100, 100))
+            self.image = pygame.transform.smoothscale(self.image, (100, 100))
             self.image.set_colorkey(CYAN)
 
             now = pygame.time.get_ticks()

@@ -32,6 +32,16 @@ class Game():
                         self.s_stand.parse_sprite("sonic3.png"),
                         self.s_stand.parse_sprite("sonic4.png")]
         
+        self.s_jump = Spritesheet('spritesheet3.png')
+        self.s_jumping = [self.s_stand.parse_sprite("sonic-jump1.png"), 
+                        self.s_stand.parse_sprite("sonic-jump2.png"),
+                        self.s_stand.parse_sprite("sonic-jump3.png"),
+                        self.s_stand.parse_sprite("sonic-jump4.png"),
+                        self.s_stand.parse_sprite("sonic-jump5.png"),
+                        self.s_stand.parse_sprite("sonic-jump6.png"),
+                        self.s_stand.parse_sprite("sonic-jump7.png")]
+        
+        
         self.index = 0
                
 
