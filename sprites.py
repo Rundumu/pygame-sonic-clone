@@ -41,18 +41,15 @@ class Sonic(pygame.sprite.Sprite):
             self.image = pygame.transform.scale(self.image, (100, 100))
 
             
-            now = pygame.time.get_ticks()
-            self.standing_frames += 0.01
             
-            try:
-                self.standing_frames = (self.standing_frames + 1) % len(self.game.s_standing)
-            except IndexError:
-                self.standing_frames = 0
-                                
+            if self.standing_frames < len(self.game.s_standing):
+                self.standing_frames += 0.01
+                if self.standing_frames >= len(self.game.s_standing):
+                    self.standing_frames = 0
+                self.image = self.game.s_standing[int(self.standing_frames)]
+                self.image = pygame.transform.scale(self.image, (100, 100))
+                self.image.set_colorkey(CYAN)
             
-            self.image = self.game.s_standing[int(self.standing_frames)]
-            self.image = pygame.transform.scale(self.image, (100, 100))
-            self.image.set_colorkey(CYAN)
             
         
 
@@ -65,7 +62,7 @@ class Sonic(pygame.sprite.Sprite):
 
                     
                 now = pygame.time.get_ticks()
-                self.jumping_frames += 0.01
+                self.jumping_frames += 0.001
                                         
                                     
                 self.jumping_frames = (self.jumping_frames + 1) % len(self.game.s_jumping)        
@@ -176,7 +173,6 @@ class Sonic(pygame.sprite.Sprite):
             self.spritesheet = Spritesheet("spritesheet2.png")
             self.image = self.spritesheet.get_sprite(0, 0, 234, 252)
             self.image = pygame.transform.smoothscale(self.image, (100, 100))
-            self.image.set_colorkey(CYAN)
 
             now = pygame.time.get_ticks()
             
@@ -187,7 +183,6 @@ class Sonic(pygame.sprite.Sprite):
             if self.animating == True:
                 self.left_current_frame = (self.left_current_frame + 1) % len(self.game.s_running)
 
-            if now - self.previous_frame > 5000:
                 self.image = self.game.s_running[int(self.left_current_frame)]
                 self.image = pygame.transform.smoothscale(self.image, (100, 100))
                 self.image = pygame.transform.flip(self.image, True, False)
@@ -197,29 +192,19 @@ class Sonic(pygame.sprite.Sprite):
                 # self.image.set_colorkey(CYAN)
 
     def runRight(self):
-        if self.vel.x > 0:
             self.spritesheet = Spritesheet("spritesheet2.png")
             self.image = self.spritesheet.get_sprite(0, 0, 234, 252)
-            self.image = pygame.transform.smoothscale(self.image, (100, 100))
-            self.image.set_colorkey(CYAN)
-
-            now = pygame.time.get_ticks()
+            self.image = pygame.transform.smoothscale(self.image, (100, 100))    
             
-            
-            self.current_frame += 1
+            if self.current_frame < len(self.game.s_running):
+                self.current_frame += 0.1
 
-
-            if self.animating == True:
-                if self.current_frame >= len(self.game.s_running):
+                if self.current_frame > len(self.game.s_running):
                     self.current_frame = 0
-                    self.animating = False
 
-            if now - self.previous_frame > 5000:
-                self.image = self.game.s_running[self.current_frame]
+                self.image = self.game.s_running[int(self.current_frame)]
                 self.image = pygame.transform.smoothscale(self.image, (100, 100))
                 self.image.set_colorkey(CYAN)
-                # self.sprite.set_colorkey(CYAN)
-                # self.image.set_colorkey(CYAN)
 
 
 # environment classes          
