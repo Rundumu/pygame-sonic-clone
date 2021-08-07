@@ -97,17 +97,17 @@ class Sonic(pygame.sprite.Sprite):
     #         if self.vel.y < -3:
     #             self.vel.y = -3
 
-    def update(self):
+    def update(self, dt):
         self.acc = vec(0, GRAVITY)
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
-            self.acc.x = -ACCEL - 2
+            self.acc.x = -ACCEL - 2 * dt
             self.faster()
             self.runLeft()
         if keys[pygame.K_RIGHT]:
             self.animate()
             self.runRight()
-            self.acc.x = ACCEL
+            self.acc.x = ACCEL * dt 
             self.faster()
         if keys[pygame.K_SPACE]:
             self.jump()
@@ -169,13 +169,9 @@ class Sonic(pygame.sprite.Sprite):
     
 
     def runLeft(self):
-        if self.vel.x < 0:
             self.spritesheet = Spritesheet("spritesheet2.png")
             self.image = self.spritesheet.get_sprite(0, 0, 234, 252)
-            self.image = pygame.transform.smoothscale(self.image, (100, 100))
-
-            now = pygame.time.get_ticks()
-            
+            self.image = pygame.transform.smoothscale(self.image, (100, 100))            
             
             self.left_current_frame += 0.01
 
@@ -218,7 +214,9 @@ class Ground(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-        
+    
+    def update(self):
+        pass
 
 
 class Platform(pygame.sprite.Sprite):
@@ -231,6 +229,9 @@ class Platform(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+
+    def update(self):
+        pass
 
 class Ramp(pygame.sprite.Sprite):
 
@@ -250,22 +251,37 @@ class Ramp(pygame.sprite.Sprite):
 
     # TODO: Figure out a way to create a function that creates ramps and collision
 
-    # def update(self):
-    #     pygame.draw.polygon(window, GREEN, [[self.x1, self.y1], [self.x2, self.y2], [self.x3, self.y3]])
-
+    def update(self, dt):
+        pass
+    
 
 class Ring(pygame.sprite.Sprite):
 
-    def __init__(self, x, y):
+    def __init__(self, game, x, y):
         pygame.sprite.Sprite.__init__(self)
+        self.game = game
         self.image = pygame.Surface((15, 15))
         self.image.fill(YELLOW)
         self.rect = self.image.get_rect()
+        self.ring_frames = 0
         self.rect.x = x
         self.rect.y = y
     
-    def update(self):
+    def update(self, dt):
         pass
+        # self.spritesheet = Spritesheet("spritesheet4.png")
+        # self.image = self.spritesheet.get_sprite(0, 0, 234, 252)
+        # self.image = pygame.transform.scale(self.image, (50, 50))
+        
+        # if self.ring_frames < len(self.game.ring_images):
+        #     self.ring_frames += 2
+
+        #     if self.ring_frames >= len(self.game.ring_images):
+        #         self.ring_frames = 0
+
+        #     self.image = self.game.ring_images[int(self.ring_frames)]
+        #     self.image = pygame.transform.scale(self.image, (50, 50))
+        #     self.image.set_colorkey(CYAN)
 
 class Spike(pygame.sprite.Sprite):
 
@@ -278,34 +294,36 @@ class Spike(pygame.sprite.Sprite):
         self.rect.midbottom = (x, y)
 
     
-    def update(self):
+    def update(self, dt):
         pass
 
 class Enemies(pygame.sprite.Sprite):
 
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
-
         self.image = pygame.Surface((50, 50))
         self.image.fill(RED)
         self.rect = self.image.get_rect()
         self.rect.midbottom = (x, y)
-        self.vel = 1
+        self.vel = 60
         self.start = (x - 100)
         self.end = (x + 100)
         self.path = [self.start, self.end]
 
-    def update(self):
+    def update(self, dt):
         if self.vel > 0:
             if self.rect.x + self.vel < self.path[1]:
-                self.rect.x += self.vel
+                self.spritesheet = Spritesheet("spritesheet5.png")
+                self.image = self.spritesheet.get_sprite(0, 0, 234, 252)
+                self.image = pygame.transform.smoothscale(self.image, (100, 100)) 
+                self.rect.x += self.vel * dt
             else:
-                self.vel = self.vel * -1
+                self.vel = (self.vel * -1) * dt
         else:
             if self.rect.x - self.vel > self.path[0]:
-                self.rect.x += self.vel
+                self.rect.x += self.vel * dt
             else:
-                self.vel = self.vel * -1
+                self.vel = (self.vel * -1) * dt
 
 # class Loop(pygame.sprite.Sprite):
 

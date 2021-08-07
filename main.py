@@ -1,3 +1,4 @@
+from pygame.sprite import Sprite
 from settings import *
 from sprites import *
 from spritesheet import Spritesheet
@@ -30,8 +31,8 @@ class Game():
         self.s_standing = [self.s_stand.parse_sprite("sonic1.png"), 
                         self.s_stand.parse_sprite("sonic2.png"),
                         self.s_stand.parse_sprite("sonic3.png"),
-                        self.s_stand.parse_sprite("sonic4.png")]
-        
+                        self.s_stand.parse_sprite("sonic4.png")] 
+
         self.s_jump = Spritesheet('spritesheet3.png')
         self.s_jumping = [self.s_jump.parse_sprite("sonic-jump1.png"), 
                         self.s_jump.parse_sprite("sonic-jump2.png"),
@@ -41,9 +42,25 @@ class Game():
                         self.s_jump.parse_sprite("sonic-jump6.png"),
                         self.s_jump.parse_sprite("sonic-jump7.png")]
         
+        # self.ring_img = Spritesheet("spritesheet4.png")
+        # self.ring_images = [self.ring_img.parse_sprite("ring1.png"), 
+        #                 self.ring_img.parse_sprite("ring2.png"),
+        #                 self.ring_img.parse_sprite("ring3.png"),
+        #                 self.ring_img.parse_sprite("ring4.png"),
+        #                 self.ring_img.parse_sprite("ring5.png"),
+        #                 self.ring_img.parse_sprite("ring6.png"),
+        #                 self.ring_img.parse_sprite("ring7.png"),
+        #                 self.ring_img.parse_sprite("ring8.png"),
+        #                 self.ring_img.parse_sprite("ring9.png")]
         
-        self.index = 0
-               
+        self.enemy_img = Spritesheet('spritesheet5.png')
+        self.enemy_images = [self.enemy_img.parse_sprite("enemy1.png"), 
+                        self.enemy_img.parse_sprite("enemy2.png"),
+                        self.enemy_img.parse_sprite("enemy3.png"),
+                        self.enemy_img.parse_sprite("enemy4.png"),
+                        self.enemy_img.parse_sprite("enemy5.png"),
+                        self.enemy_img.parse_sprite("enemy6.png"),
+                        self.enemy_img.parse_sprite("enemy7.png")]               
 
         # groups
         self.sprites = pygame.sprite.Group()
@@ -67,7 +84,7 @@ class Game():
 
         # procedural generation (not sure)
         for ring in RING_LIST:
-            r = Ring(*ring)
+            r = Ring(self, *ring)
             self.rings.add(r)
             self.sprites.add(r) 
 
@@ -96,28 +113,28 @@ class Game():
     def run(self):
         self.playing = True
         while self.playing:
-            self.clock.tick(FPS)
+            self.dt = self.clock.tick(FPS) / 1000
+            print(self.dt)
             self.events()
-            self.update()
+            self.update(self.dt)
             self.draw()
 
     def draw(self):
         # draw
         self.window.fill(BLACK)
         
-        
         for sprite in self.sprites:
             self.window.blit(sprite.image, self.camera.apply(sprite))
 
         pygame.display.flip()
 
-    def update(self):
+    def update(self, dt):
         # update
 
         # self.rings.update()
         # self.enemy.update()
         # self.spikes.update()
-        self.sprites.update()
+        self.sprites.update(dt)
 
 
         if self.s.vel.y > 0:
@@ -200,7 +217,7 @@ class Game():
                 if self.s.vel.y > 0 and self.s.rect.bottom > prick.rect.top:
                     if self.ring_count > 0:
                         self.ring_count = self.ring_count / 2
-                        r = Ring(self.s.pos.x - 180, self.s.rect.centery)
+                        r = Ring(self, self.s.pos.x - 180, self.s.rect.centery)
                         self.rings.add(r)
                         self.sprites.add(r)
                         self.window.blit(r.image, (self.s.pos.x - 180, self.s.rect.centery))
