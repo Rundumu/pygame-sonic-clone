@@ -204,6 +204,20 @@ class Sonic(pygame.sprite.Sprite):
                 self.image = pygame.transform.smoothscale(self.image, (100, 100))
                 self.image.set_colorkey(CYAN)
 
+class Background(pygame.sprite.Sprite):
+    
+    def __init__(self, x, y, width, height):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load("background.png").convert()
+        self.image = pygame.transform.smoothscale(self.image, (width, height))
+        # self.image.fill(layer)
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+        self.rect.width = width
+
+    def update(self, dt):
+        pass
 
 # environment classes          
 class Ground(pygame.sprite.Sprite):
@@ -305,7 +319,7 @@ class Enemies(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((50, 50))
         self.image.fill(RED)
-        self.spritesheet = Spritesheet("spritesheet5.png")
+        #self.spritesheet = Spritesheet("spritesheet5.png")
         # self.image = self.spritesheet.get_sprite(0, 0, 234, 252)
         # self.image = pygame.transform.smoothscale(self.image, (50, 50))
         # self.image.set_colorkey(WHITE)
@@ -318,18 +332,11 @@ class Enemies(pygame.sprite.Sprite):
 
     def update(self, dt):
         if self.vel > 0:
-            
-            self.image = self.spritesheet.get_sprite(0, 0, 234, 252)
-            self.image = pygame.transform.smoothscale(self.image, (50, 50))
-            self.image.set_colorkey(WHITE)
             if self.rect.x + self.vel < self.path[1]:
                 self.rect.x += self.vel 
             else:
                 self.vel = (self.vel * -1) 
         else:
-            self.image = self.spritesheet.get_sprite(0, 0, 234, 252)
-            self.image = pygame.transform.smoothscale(self.image, (50, 50))
-            self.image.set_colorkey(WHITE)
             if self.rect.x - self.vel > self.path[0]:
                 self.rect.x += self.vel 
             else:

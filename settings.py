@@ -5,6 +5,10 @@ WIDTH = 800
 HEIGHT = 600
 FPS = 60
 
+# background colors
+LAYER1 = (61, 158, 81)
+LAYER2 = (61, 158, 97)
+LAYER3 = (45, 117, 70)
 
 
 # colors

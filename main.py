@@ -4,8 +4,6 @@ from sprites import *
 from spritesheet import Spritesheet
 from os import path
 import pygame
-import time
-
 
 
 class Game():
@@ -21,7 +19,9 @@ class Game():
         self.camera = Camera(WIDTH, HEIGHT)
         self.ring_count = 0
         self.window = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
-    
+        pygame.mixer.music.load("ost.wav")
+
+
     def new_game(self):
 
         self.s_run = Spritesheet('spritesheet2.png')
@@ -76,14 +76,24 @@ class Game():
         self.spikes = pygame.sprite.Group()
         self.enemies = pygame.sprite.Group()
 
-        # sprites   
+        # sprites
+        self.scroll = [0, 0]
+
         self.s = Sonic(self)
         self.ground = Ground(self, 0, HEIGHT - 50)
+        self.background = Background(self.scroll[0], self.scroll[1], WIDTH, HEIGHT)
+        self.background2 = Background(self.background.rect.width, self.scroll[1], WIDTH, HEIGHT)
+
+        if self.scroll[0] <= -WIDTH:
+            print("pop")
 
         # adding to groups
-        
+        self.sprites.add(self.background)
+        self.sprites.add(self.background2)
+
         self.sprites.add(self.s)
         self.sprites.add(self.ground)
+        
         self.floor.add(self.ground)
 
         # procedural generation (not sure)
@@ -112,10 +122,13 @@ class Game():
             self.enemies.add(enemy)
             self.sprites.add(enemy)
         
+        pygame.mixer.music.play(loops=-1)
+        
         self.run()
 
     def run(self):
         self.playing = True
+        
         while self.playing:
             self.events()
             self.update()
@@ -123,29 +136,32 @@ class Game():
 
     def draw(self):
         # draw
-        self.window.fill(BLACK)
+        self.window.fill(CYAN)
         
         for sprite in self.sprites:
             self.window.blit(sprite.image, self.camera.apply(sprite))
+            
 
         pygame.display.flip()
 
     def update(self):
 
-        last_time = time.time()
+        last_time = pygame.time.get_ticks()
 
+        dt = (last_time - FPS) / FPS
 
-        dt = time.time() - last_time 
+        if dt > 60:
+            last_time = pygame.time.get_ticks()
+            dt = (last_time - FPS) / FPS
 
-        dt *= FPS
-        # update
+        
+        self.scroll[0] -= 1 
 
-        # self.rings.update()
-        # self.enemy.update()
-        # self.spikes.update()
+        if self.scroll[0] == -self.background.rect.width:
+            self.window.blit(self.background.image, (self.background.rect.width+1, 0))
+            self.scroll[0] = 0
+            
         self.sprites.update(dt)
-
-        last_time = time.time()
 
         if self.s.vel.y > 0:
             collisions = pygame.sprite.spritecollide(self.s, self.floor, False)
@@ -157,7 +173,6 @@ class Game():
                         self.s.pos.y = collision.rect.top
                         self.s.rect.bottom = self.s.pos.y
                         self.s.vel.y = 0 
-
 
 
         hits = pygame.sprite.spritecollide(self.s, self.plats, False)
@@ -211,8 +226,7 @@ class Game():
                     self.s.pos.y = self.s.rect.bottom
 
         ring_hits = pygame.sprite.spritecollide(self.s, self.rings, False)
-        
-        
+
         
         if ring_hits:
             self.ring_count += 1
@@ -267,7 +281,7 @@ class Game():
                 if abs(self.s.rect.left - clash.rect.right) < 10:
                     if self.ring_count > 0:
                         self.ring_count = self.ring_count / 2
-                        r = Ring(self.s.pos.x + 80, self.s.rect.centery)
+                        r = Ring(self, self.s.pos.x + 80, self.s.rect.centery)
                         self.rings.add(r)
                         self.sprites.add(r)
                         self.window.blit(r.image, (self.s.pos.x + 80, self.s.rect.centery))
@@ -283,7 +297,7 @@ class Game():
                 if abs(self.s.rect.right - clash.rect.left) < 10:
                     if self.ring_count > 0:
                         self.ring_count = self.ring_count / 2
-                        r = Ring(self.s.pos.x - 80, self.s.rect.centery)
+                        r = Ring(self, self.s.pos.x - 80, self.s.rect.centery)
                         self.rings.add(r)
                         self.sprites.add(r)
                         self.window.blit(r.image, (self.s.pos.x - 80, self.s.rect.centery))
