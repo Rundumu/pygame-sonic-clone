@@ -2,6 +2,7 @@ import pygame
 from settings import *
 from spritesheet import Spritesheet
 import math
+import time
 
 vec = pygame.math.Vector2
             
@@ -33,6 +34,7 @@ class Sonic(pygame.sprite.Sprite):
         self.animating = False
         self.radians = 0
         self.circ_vel = -20
+        
 
     def stand(self):
         if self.standing:
@@ -101,13 +103,13 @@ class Sonic(pygame.sprite.Sprite):
         self.acc = vec(0, GRAVITY)
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
-            self.acc.x = -ACCEL - 2 * dt
+            self.acc.x = -ACCEL - 2
             self.faster()
             self.runLeft()
         if keys[pygame.K_RIGHT]:
             self.animate()
             self.runRight()
-            self.acc.x = ACCEL * dt 
+            self.acc.x = ACCEL
             self.faster()
         if keys[pygame.K_SPACE]:
             self.jump()
@@ -215,7 +217,7 @@ class Ground(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
     
-    def update(self):
+    def update(self, dt):
         pass
 
 
@@ -230,7 +232,7 @@ class Platform(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
 
-    def update(self):
+    def update(self, dt):
         pass
 
 class Ramp(pygame.sprite.Sprite):
@@ -303,6 +305,10 @@ class Enemies(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((50, 50))
         self.image.fill(RED)
+        self.spritesheet = Spritesheet("spritesheet5.png")
+        # self.image = self.spritesheet.get_sprite(0, 0, 234, 252)
+        # self.image = pygame.transform.smoothscale(self.image, (50, 50))
+        # self.image.set_colorkey(WHITE)
         self.rect = self.image.get_rect()
         self.rect.midbottom = (x, y)
         self.vel = 60
@@ -312,18 +318,22 @@ class Enemies(pygame.sprite.Sprite):
 
     def update(self, dt):
         if self.vel > 0:
+            
+            self.image = self.spritesheet.get_sprite(0, 0, 234, 252)
+            self.image = pygame.transform.smoothscale(self.image, (50, 50))
+            self.image.set_colorkey(WHITE)
             if self.rect.x + self.vel < self.path[1]:
-                self.spritesheet = Spritesheet("spritesheet5.png")
-                self.image = self.spritesheet.get_sprite(0, 0, 234, 252)
-                self.image = pygame.transform.smoothscale(self.image, (100, 100)) 
-                self.rect.x += self.vel * dt
+                self.rect.x += self.vel 
             else:
-                self.vel = (self.vel * -1) * dt
+                self.vel = (self.vel * -1) 
         else:
+            self.image = self.spritesheet.get_sprite(0, 0, 234, 252)
+            self.image = pygame.transform.smoothscale(self.image, (50, 50))
+            self.image.set_colorkey(WHITE)
             if self.rect.x - self.vel > self.path[0]:
-                self.rect.x += self.vel * dt
+                self.rect.x += self.vel 
             else:
-                self.vel = (self.vel * -1) * dt
+                self.vel = (self.vel * -1) 
 
 # class Loop(pygame.sprite.Sprite):
 

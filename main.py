@@ -4,11 +4,15 @@ from sprites import *
 from spritesheet import Spritesheet
 from os import path
 import pygame
+import time
+
 
 
 class Game():
     
     def __init__(self):
+
+
         pygame.init()
         pygame.mixer.init()
 
@@ -113,10 +117,8 @@ class Game():
     def run(self):
         self.playing = True
         while self.playing:
-            self.dt = self.clock.tick(FPS) / 1000
-            print(self.dt)
             self.events()
-            self.update(self.dt)
+            self.update()
             self.draw()
 
     def draw(self):
@@ -128,7 +130,14 @@ class Game():
 
         pygame.display.flip()
 
-    def update(self, dt):
+    def update(self):
+
+        last_time = time.time()
+
+
+        dt = time.time() - last_time 
+
+        dt *= FPS
         # update
 
         # self.rings.update()
@@ -136,6 +145,7 @@ class Game():
         # self.spikes.update()
         self.sprites.update(dt)
 
+        last_time = time.time()
 
         if self.s.vel.y > 0:
             collisions = pygame.sprite.spritecollide(self.s, self.floor, False)
@@ -192,7 +202,6 @@ class Game():
 
                 pos_height = min(pos_height, ramp_hits[0].rect.height)
                 pos_height = max(pos_height, 0)
-
 
 
                 target_y = hit.rect.y + hit.rect.height - pos_height
