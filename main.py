@@ -19,7 +19,7 @@ class Game():
         self.camera = Camera(WIDTH, HEIGHT)
         self.ring_count = 0
         self.window = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
-        pygame.mixer.music.load("ost.wav")
+        pygame.mixer.music.load("ost.wav") # background music 
 
 
     def new_game(self):
@@ -81,16 +81,18 @@ class Game():
 
         self.s = Sonic(self)
         self.ground = Ground(self, 0, HEIGHT - 50)
-        self.background = Background(self.scroll[0], self.scroll[1], WIDTH, HEIGHT)
-        self.background2 = Background(self.background.rect.width, self.scroll[1], WIDTH, HEIGHT)
+        self.current_x_pos = 0
+        for i in range(100):        
+            self.background = Background(self.current_x_pos, self.scroll[1], WIDTH, HEIGHT)
+            self.current_x_pos += 800
+            self.sprites.add(self.background)
+            
 
-        if self.scroll[0] <= -WIDTH:
-            print("pop")
+        
+            
+                
 
-        # adding to groups
-        self.sprites.add(self.background)
-        self.sprites.add(self.background2)
-
+        # adding to groups        
         self.sprites.add(self.s)
         self.sprites.add(self.ground)
         
@@ -123,6 +125,7 @@ class Game():
             self.sprites.add(enemy)
         
         pygame.mixer.music.play(loops=-1)
+        pygame.mixer.music.set_volume(0)
         
         self.run()
 
@@ -153,13 +156,7 @@ class Game():
         if dt > 60:
             last_time = pygame.time.get_ticks()
             dt = (last_time - FPS) / FPS
-
         
-        self.scroll[0] -= 1 
-
-        if self.scroll[0] == -self.background.rect.width:
-            self.window.blit(self.background.image, (self.background.rect.width+1, 0))
-            self.scroll[0] = 0
             
         self.sprites.update(dt)
 
@@ -307,7 +304,7 @@ class Game():
                     self.s.rect.right = (clash.rect.left - 50)
                     self.s.pos.x = self.s.rect.right
                     clash.vel = (clash.vel * -1)
-                    self.ring_count = 0 
+                    self.ring_count = 0. 
                     # TODO: study collisions with moving objects
 
         RING_TOTAL = self.ring_count       

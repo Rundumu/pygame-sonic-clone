@@ -173,7 +173,7 @@ class Sonic(pygame.sprite.Sprite):
     def runLeft(self):
             self.spritesheet = Spritesheet("spritesheet2.png")
             self.image = self.spritesheet.get_sprite(0, 0, 234, 252)
-            self.image = pygame.transform.smoothscale(self.image, (100, 100))            
+            self.image = pygame.transform.smoothscale(self.image, (50, 50))            
             
             self.left_current_frame += 0.01
 
@@ -318,14 +318,14 @@ class Enemies(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((50, 50))
-        self.image.fill(RED)
-        #self.spritesheet = Spritesheet("spritesheet5.png")
-        # self.image = self.spritesheet.get_sprite(0, 0, 234, 252)
-        # self.image = pygame.transform.smoothscale(self.image, (50, 50))
-        # self.image.set_colorkey(WHITE)
+        # self.image.fill(RED)
+        self.spritesheet = Spritesheet("spritesheet5.png")
+        self.image = self.spritesheet.get_sprite(0, 0, 234, 252)
+        self.image = pygame.transform.smoothscale(self.image, (50, 50))
+        self.image.set_colorkey(WHITE)
         self.rect = self.image.get_rect()
         self.rect.midbottom = (x, y)
-        self.vel = 60
+        self.vel = 5
         self.start = (x - 100)
         self.end = (x + 100)
         self.path = [self.start, self.end]

@@ -3,7 +3,7 @@ import pygame
 # game properties
 WIDTH = 800
 HEIGHT = 600
-FPS = 60
+FPS = 1
 
 # background colors
 LAYER1 = (61, 158, 81)
