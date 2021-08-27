@@ -64,7 +64,9 @@ class Game():
                         self.enemy_img.parse_sprite("enemy4.png"),
                         self.enemy_img.parse_sprite("enemy5.png"),
                         self.enemy_img.parse_sprite("enemy6.png"),
-                        self.enemy_img.parse_sprite("enemy7.png")]               
+                        self.enemy_img.parse_sprite("enemy7.png")]
+
+                         
 
         # groups
         self.sprites = pygame.sprite.Group()
@@ -120,7 +122,7 @@ class Game():
             self.sprites.add(spike)
 
         for e in ENEMY_LIST:
-            enemy = Enemies(*e)
+            enemy = Enemies(self, *e)
             self.enemies.add(enemy)
             self.sprites.add(enemy)
         

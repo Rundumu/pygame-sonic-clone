@@ -13,8 +13,8 @@ class Sonic(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.spritesheet = Spritesheet("spritesheet.png")
         self.image = self.spritesheet.get_sprite(0, 0, 234, 252)
-        self.image = pygame.transform.scale(self.image, (100, 100))
         self.image.set_colorkey(CYAN)
+        self.image = pygame.transform.scale(self.image, (100, 100))
         #self.image.fill(BLUE)
         self.rect = self.image.get_rect()
         self.rect.center = (WIDTH / 2, HEIGHT - 51)
@@ -40,6 +40,7 @@ class Sonic(pygame.sprite.Sprite):
         if self.standing:
             self.spritesheet = Spritesheet("spritesheet.png")
             self.image = self.spritesheet.get_sprite(0, 0, 234, 252)
+            self.image.set_colorkey(CYAN) 
             self.image = pygame.transform.scale(self.image, (100, 100))
 
             
@@ -49,8 +50,8 @@ class Sonic(pygame.sprite.Sprite):
                 if self.standing_frames >= len(self.game.s_standing):
                     self.standing_frames = 0
                 self.image = self.game.s_standing[int(self.standing_frames)]
+                self.image.set_colorkey(CYAN) 
                 self.image = pygame.transform.scale(self.image, (100, 100))
-                self.image.set_colorkey(CYAN)
             
             
         
@@ -60,6 +61,7 @@ class Sonic(pygame.sprite.Sprite):
             if self.jumping:
                 self.spritesheet = Spritesheet("spritesheet3.png")
                 self.image = self.spritesheet.get_sprite(0, 0, 232, 252)
+                self.image.set_colorkey(CYAN) 
                 self.image = pygame.transform.scale(self.image, (100, 100))
 
                     
@@ -69,9 +71,9 @@ class Sonic(pygame.sprite.Sprite):
                                     
                 self.jumping_frames = (self.jumping_frames + 1) % len(self.game.s_jumping)        
                 self.image = self.game.s_jumping[int(self.jumping_frames)]
-                self.image = pygame.transform.scale(self.image, (100, 100))
                 self.image.set_colorkey(CYAN) 
-
+                self.image = pygame.transform.scale(self.image, (100, 100))
+                
             self.rect.y += 1
             hits = pygame.sprite.spritecollide(self, self.game.floor, False)
             self.rect.y -= 1
@@ -240,7 +242,9 @@ class Platform(pygame.sprite.Sprite):
     def __init__(self, game, x, y, plat):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((plat))
-        self.image.fill(GREEN)
+        self.image = pygame.image.load("platform.png")
+        self.image = pygame.transform.scale(self.image, (plat))
+        # self.image.fill(GREEN)
         self.game = game
         self.rect = self.image.get_rect()
         self.rect.x = x
@@ -248,7 +252,7 @@ class Platform(pygame.sprite.Sprite):
 
     def update(self, dt):
         pass
-
+    
 class Ramp(pygame.sprite.Sprite):
 
     def __init__(self, x, y, width, height, ramp=0):
@@ -315,22 +319,25 @@ class Spike(pygame.sprite.Sprite):
 
 class Enemies(pygame.sprite.Sprite):
 
-    def __init__(self, x, y):
+    def __init__(self, game, x, y):
         pygame.sprite.Sprite.__init__(self)
+        self.game = game
         self.image = pygame.Surface((50, 50))
         # self.image.fill(RED)
         self.spritesheet = Spritesheet("spritesheet5.png")
         self.image = self.spritesheet.get_sprite(0, 0, 234, 252)
-        self.image = pygame.transform.smoothscale(self.image, (50, 50))
         self.image.set_colorkey(WHITE)
+        self.image = pygame.transform.smoothscale(self.image, (50, 50))
         self.rect = self.image.get_rect()
         self.rect.midbottom = (x, y)
-        self.vel = 5
+        self.current_frame = 0
+        self.vel = 2
         self.start = (x - 100)
         self.end = (x + 100)
         self.path = [self.start, self.end]
 
     def update(self, dt):
+        self.animate()
         if self.vel > 0:
             if self.rect.x + self.vel < self.path[1]:
                 self.rect.x += self.vel 
@@ -340,7 +347,21 @@ class Enemies(pygame.sprite.Sprite):
             if self.rect.x - self.vel > self.path[0]:
                 self.rect.x += self.vel 
             else:
-                self.vel = (self.vel * -1) 
+                self.vel = (self.vel * -1)
+
+    def animate(self):
+        for i in self.game.enemy_images:
+            self.current_frame += 0.01
+            if self.current_frame < len(self.game.enemy_images):
+                self.image = self.game.enemy_images[int(self.current_frame)]
+                self.image.set_colorkey(KINDA_WHITE)
+                self.image = pygame.transform.scale(self.image, (50, 50))
+
+            if self.current_frame >= len(self.game.enemy_images):
+                self.current_frame = 0                
+
+
+
 
 # class Loop(pygame.sprite.Sprite):
 
