@@ -17,8 +17,8 @@ class Sonic(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image, (100, 100))
         #self.image.fill(BLUE)
         self.rect = self.image.get_rect()
-        self.rect.center = (WIDTH / 2, HEIGHT - 51)
-        self.pos = vec(WIDTH / 4 , HEIGHT - 51)
+        self.rect.center = (WIDTH / 2, HEIGHT - 41)
+        self.pos = vec(WIDTH / 4 , HEIGHT - 10)
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
         self.jumping = False
@@ -259,7 +259,7 @@ class Ramp(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((width, height))
         self.image.fill(GREEN)
-        #self.image.set_alpha(0)
+        self.image.set_alpha(0)
         self.rect = self.image.get_rect()
         self.rect.midbottom = (x, y)
         self.ramp = ramp
@@ -272,8 +272,13 @@ class Ramp(pygame.sprite.Sprite):
     # TODO: Figure out a way to create a function that creates ramps and collision
 
     def update(self, dt):
-        pass
-    
+        if self.ramp == 1:
+            self.image = pygame.image.load("ramp1.png").convert_alpha()
+            self.image.set_colorkey(PLATFORM_BLUE)
+        if self.ramp == 2:
+            self.image = pygame.image.load("ramp2.png")
+            self.image.set_colorkey(PLATFORM_BLUE)
+
 
 class Ring(pygame.sprite.Sprite):
 
@@ -281,7 +286,9 @@ class Ring(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.game = game
         self.image = pygame.Surface((15, 15))
-        self.image.fill(YELLOW)
+        self.image = pygame.image.load("ring.png")
+        self.image = pygame.transform.scale(self.image, (15, 15))
+        #self.image.fill(YELLOW)
         self.rect = self.image.get_rect()
         self.ring_frames = 0
         self.rect.x = x
@@ -309,7 +316,9 @@ class Spike(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
 
         self.image = pygame.Surface((30, 50))
-        self.image.fill(RED)
+        self.image = pygame.image.load("spike.png").convert()
+        self.image.set_colorkey(WHITE)
+        self.image = pygame.transform.scale(self.image, (30, 50))
         self.rect = self.image.get_rect()
         self.rect.midbottom = (x, y)
 
